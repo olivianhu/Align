@@ -24,6 +24,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmitEvent}>
+      <h1>Login</h1>
       <div className="form_control">
         <label htmlFor="user-email">Email:</label>
         <input
