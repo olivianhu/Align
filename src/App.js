@@ -2,6 +2,7 @@ import './App.css';
 import { useState } from 'react'
 import Axios from 'axios'
 import Login from './components/Login';
+import CreationPage from './components/CreationPage';
 
 export default function App() {
 
@@ -26,7 +27,7 @@ export default function App() {
             <button
             onClick={() => {sendMessage()}}
             >Send Message</button> */}
-            
+            <CreationPage />
             <Login />
         </div>
     )
