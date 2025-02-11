@@ -20,15 +20,15 @@ export default function App() {
     }
 
     const [message, setMessage] = useState("No Current Message")
+    const [showLogin, setShowLogin] = useState(false)
     
     return (
         <div className='container'>
+            {showLogin ? <Login /> : <CreationPage />}
             {/* <p>{message}</p>
             <button
             onClick={() => {sendMessage()}}
             >Send Message</button> */}
-            <CreationPage />
-            <Login />
         </div>
     )
 }
