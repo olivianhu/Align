@@ -1,8 +1,8 @@
 import './App.css';
 import { useState } from 'react'
 import Axios from 'axios'
-import Login from '../meet-maker/src/components/Login';
-import CreationPage from '../meet-maker/src/components/CreationPage';
+import Login from './components/Login';
+import CreationPage from './components/CreationPage';
 
 export default function App() {
 
