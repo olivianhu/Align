@@ -25,10 +25,10 @@ export default function App() {
     return (
         <div className='container'>
             {showLogin ? <Login /> : <CreationPage />}
-            {/* <p>{message}</p>
+            <p>{message}</p>
             <button
             onClick={() => {sendMessage()}}
-            >Send Message</button> */}
+            >Send Message</button>
         </div>
     )
 }
