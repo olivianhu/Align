@@ -12,10 +12,13 @@ const CreationPage = () => {
 
     const requestBody = {
       name,
-      timeRange: `[${startTime}:00, ${endTime}:00)`, // tstzrange
+      startTime: `0${startTime}:00:00 EST`, 
+      endTime:  `${endTime}:00:00 EST`, 
       dateRange: `[${startDate}, ${endDate}]`, // daterange
       user: 1, // replace with user id
     };
+    
+    // console.log(requestBody);
 
     try {
       const response = await fetch("http://localhost:5000/meetings", {
