@@ -1,34 +1,26 @@
 import './App.css';
 import { useState } from 'react'
-import Axios from 'axios';
 import Login from './components/Login';
 import CreationPage from './components/CreationPage';
 
 export default function App() {
 
-    // function sendMessage() {
-    //   Axios.get('http://localhost:5000/')
-    //   .then(function (response) {
-    //     console.log('response successfully received, response below')
-    //     console.log(response)
-
-    //     setMessage(response.data);
-    //   }).catch(function (error) {
-    //       console.log('response unsuccessfully received, error below')
-    //       console.log(error)
-    //   })
-    // }
-
-    // const [message, setMessage] = useState("No Current Message")
     const [showLogin, setShowLogin] = useState(false)
+
+    const toggleLogin = () => {
+      setShowLogin(!showLogin);
+    }
     
     return (
         <div className='p-10'>
-            {showLogin ? <Login /> : <CreationPage />}
-            {/* <p>{message}</p>
-            <button
-            onClick={() => {sendMessage()}}
-            >Send Message</button> */}
+          <button 
+            className='border border-gray-400 rounded-md px-2 py-1 mb-4 text-white'
+            onClick={toggleLogin}
+            >
+            Login
+          </button>
+
+          {showLogin ? <Login /> : <CreationPage />}
         </div>
     )
 }
