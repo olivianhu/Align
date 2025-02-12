@@ -45,7 +45,7 @@ const CreationPage = () => {
           <label className="text-lg">Name: </label>
           <input
               type="text"
-              placeholder="Name"
+              placeholder="My Meeting"
               className="border border-gray-300 rounded-md text-sm px-1"
               value={name}
               onChange={(e) => setName(e.target.value)}

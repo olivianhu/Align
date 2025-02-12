@@ -9,11 +9,20 @@ the server via app.listen()
 */
 const app = express()
 
-//uses cors headers to allow requests between servers
-app.use(cors())
+const corsOptions = {
+  origin: "http://localhost:5173", // Allow requests from your frontend
+  methods: "GET,POST,PUT,DELETE",  // Allow specific HTTP methods
+  allowedHeaders: "Content-Type",  // Allow certain headers
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
 
 // POST endpoint
 app.post("/meetings", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   const { name, timeRange, dateRange, user } = req.body;
 
   try {
