@@ -34,6 +34,7 @@ app.post("/meetings", async (req, res) => {
 
     const values = [name, startTime, endTime, dateRange, user];
     const result = await pool.query(query, values);
+    // console.log(result);
 
     res.status(201).json(result.rows[0]);
   } catch (error) {

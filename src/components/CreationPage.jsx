@@ -1,20 +1,29 @@
 import { useState } from "react";
 
 const CreationPage = () => {
-  const [name, setName] = useState("");
-  const [startTime, setStartTime] = useState("0");
-  const [endTime, setEndTime] = useState("23");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+
+  const [meetingData, setMeetingData] = useState({
+    name: "",
+    startTime: "9",
+    endTime: "20",
+    startDate: "",
+    endDate: "",
+  });
+
+  const [createdMeeting, setCreatedMeeting] = useState(null);
+
+  const handleChange = (e) => {
+    setMeetingData({ ...meetingData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const requestBody = {
       name,
-      startTime: `0${startTime}:00:00 EST`, 
-      endTime:  `${endTime}:00:00 EST`, 
-      dateRange: `[${startDate}, ${endDate}]`, // daterange
+      startTime: `${meetingData.startTime}:00:00 EST`, 
+      endTime:  `${meetingData.endTime}:00:00 EST`, 
+      dateRange: `[${meetingData.startDate}, ${meetingData.endDate}]`, // daterange
       user: 1, // replace with user id
     };
     
@@ -31,6 +40,9 @@ const CreationPage = () => {
 
       if (response.ok) {
         console.log("Meeting created successfully");
+        const data = await response.json();
+        console.log(data);
+        setCreatedMeeting(data);
       } else {
         console.error("Failed to create meeting");
       }
@@ -41,6 +53,15 @@ const CreationPage = () => {
 
   return(
     <div>
+      {createdMeeting && (
+        <div className="p-4 border border-green-500 rounded-md bg-green-100 my-4">
+          <h2 className="text-lg font-semibold">Meeting Created!</h2>
+          <p><strong>Name:</strong> {createdMeeting.name}</p>
+          <p><strong>Time Range:</strong> {createdMeeting.start_time} to {createdMeeting.end_time}</p>
+          <p><strong>Date Range:</strong> {createdMeeting.date_range}</p>
+        </div>
+      )}
+
       <h1 className="text-xl font-bold mb-4">Meeting Creation</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         
@@ -48,10 +69,11 @@ const CreationPage = () => {
           <label className="text-lg">Name: </label>
           <input
               type="text"
+              name="name"
               placeholder="My Meeting"
               className="border border-gray-300 rounded-md text-sm px-1"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={meetingData.name}
+              onChange={handleChange}
             />
         </div>
 
@@ -59,11 +81,11 @@ const CreationPage = () => {
           <label htmlFor="times">What times?</label>
           <div className="flex gap-2">
             <select
-              name="start-time"
+              name="startTime"
               id="start-time"
               className="border border-gray-300 rounded-md"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
+              value={meetingData.startTime}
+              onChange={handleChange}
             >
               {[...Array(24).keys()].map((hour) => (
                 <option key={hour} value={hour}>
@@ -73,11 +95,11 @@ const CreationPage = () => {
             </select>
             to
             <select
-              name="end-time"
+              name="endTime"
               id="end-time"
               className="border border-gray-300 rounded-md"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
+              value={meetingData.endTime}
+              onChange={handleChange}
             >
               {[...Array(24).keys()].map((hour) => (
                 <option key={hour} value={hour}>
@@ -93,16 +115,18 @@ const CreationPage = () => {
           <div className="flex gap-2">
             <input
               type="date"
+              name="startDate"
               className="border border-gray-300 rounded-md"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              value={meetingData.startDate}
+              onChange={handleChange}
             />
             to
             <input
               type="date"
+              name="endDate"
               className="border border-gray-300 rounded-md"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              value={meetingData.endDate}
+              onChange={handleChange}
             />
           </div>
         </div>
