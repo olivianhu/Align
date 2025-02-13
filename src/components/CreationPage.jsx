@@ -20,7 +20,7 @@ const CreationPage = () => {
     e.preventDefault();
 
     const requestBody = {
-      name,
+      name: `${meetingData.name}`,
       startTime: `${meetingData.startTime}:00:00 EST`, 
       endTime:  `${meetingData.endTime}:00:00 EST`, 
       dateRange: `[${meetingData.startDate}, ${meetingData.endDate}]`, // daterange

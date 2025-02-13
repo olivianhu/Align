@@ -24,6 +24,7 @@ app.post("/meetings", async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   const { name, startTime, endTime, dateRange, user } = req.body;
+  console.log(req.body);
 
   try {
     const query = `
