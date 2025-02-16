@@ -1,26 +1,33 @@
 import './App.css';
-import { useState } from 'react'
-import Login from './components/Login';
-import CreationPage from './components/CreationPage';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from './pages/LoginPage';
+import CreationPage from './pages/CreationPage';
+import Layout from './layout-components/Layout';
+import LandingPage from './pages/LandingPage';
 
 export default function App() {
-
-    const [showLogin, setShowLogin] = useState(false)
-
-    const toggleLogin = () => {
-      setShowLogin(!showLogin);
-    }
     
     return (
-        <div className='p-10'>
-          <button 
-            className='border border-gray-400 rounded-md px-2 py-1 mb-4 text-white'
-            onClick={toggleLogin}
-            >
-            Login
-          </button>
-
-          {showLogin ? <Login /> : <CreationPage />}
-        </div>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={<Layout />}
+          >
+            <Route
+              index
+              element={<LandingPage />}
+            />
+            <Route
+              path="/login"
+              element={<LoginPage />}
+            />
+            <Route
+              path="/creation"
+              element={<CreationPage />}
+            />
+          </Route>
+        </Routes>
+      </Router>
     )
 }

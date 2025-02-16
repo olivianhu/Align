@@ -1,10 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Gantari", system-ui, Avenir, Helvetica, Arial, sans-serif;
 
   color: rgb(0, 0, 0);
-  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -12,24 +11,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #396bd7;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  background-color: #2d5abd;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 
 

@@ -1,4 +1,11 @@
 @import "tailwindcss";
 
 
+button {
+  cursor: pointer;
+}
 
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

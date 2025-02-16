@@ -23,34 +23,30 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmitEvent}>
-      <h1>Login</h1>
-      <div className="form_control">
+    <form onSubmit={handleSubmitEvent} className="flex flex-col gap-3 w-40">
+      <h1 className="text-lg font-bold">Login</h1>
+      <div>
         <label htmlFor="user-email">Email:</label>
         <input
           type="email"
           id="user-email"
           name="email"
-          placeholder="example@yahoo.com"
+          placeholder="example@gmail.com"
+          className="border border-gray-300 rounded-md text-sm px-1"
           onChange={handleInput}
         />
-        <div id="user-email" className="sr-only">
-          Please enter a valid username. It must contain at least 6 characters.
-        </div>
       </div>
-      <div className="form_control">
+      <div>
         <label htmlFor="password">Password:</label>
         <input
           type="password"
           id="password"
           name="password"
+          className="border border-gray-300 rounded-md text-sm px-1"
           onChange={handleInput}
         />
-        <div id="user-password" className="sr-only">
-          your password should be more than 6 characters
-        </div>
       </div>
-      <button className="btn-submit">Submit</button>
+      <button className="bg-blue">Submit</button>
     </form>
   );
 };
