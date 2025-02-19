@@ -5,6 +5,8 @@
 
   color: rgb(0, 0, 0);
 
+  height: 100vh;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

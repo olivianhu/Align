@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CreationPage = () => {
+const RecurringPage = () => {
 
   const [meetingData, setMeetingData] = useState({
     name: "",
@@ -11,8 +11,6 @@ const CreationPage = () => {
   });
 
   const [createdMeeting, setCreatedMeeting] = useState(null);
-  const [isRecurring, setRecurring] = useState(null);
-  const [onChoicePage, setChoicePage] = useState(true);
 
   const handleChange = (e) => {
     setMeetingData({ ...meetingData, [e.target.name]: e.target.value });
@@ -54,28 +52,11 @@ const CreationPage = () => {
   };
 
   return(
-    <div>
-      {onChoicePage 
-        ? 
-          <div className="bg-gray-900 w-full min-h-screen flex flex-col pt-48 gap-8 text-white text-center items-center">
-            <div className="text-6xl font-bold">
-              Are you looking <br />
-              to create a
-            </div>
-            <button 
-              className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium"
-              onClick={() => {setChoicePage(false); setRecurring(true)}}
-              >Recurring meeting</button>
-            <div className="text-6xl font-bold">
-              Or
-            </div>
-            <button 
-              className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium"
-              onClick={() => {setChoicePage(false); setRecurring(false)}}
-              >Specific event</button>
-          </div>
-        : 
-          <div className="bg-gray-900 w-full min-h-screen pt-60 pl-160 flex flex-col gap-12 text-white">
+    <div className="grid grid-cols-[2fr_3fr] bg-[#F9D489]">
+      <div>
+        Are you looking to creating a 
+      </div>
+      <div className="bg-[#79A2DC] w-full min-h-screen pt-60 pl-80 flex flex-col gap-12 text-white">
         {createdMeeting && (
           <div className="p-4 border border-green-500 rounded-md bg-green-100 my-4">
             <h2 className="text-lg font-semibold">Meeting Created!</h2>
@@ -158,9 +139,9 @@ const CreationPage = () => {
             Create Meeting
           </button>
         </form>
-      </div>}
+      </div>
     </div>
   )
 }
 
-export default CreationPage;
+export default RecurringPage;

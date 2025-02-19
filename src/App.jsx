@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from './pages/LoginPage';
-import CreationPage from './pages/CreationPage';
 import Layout from './layout-components/Layout';
 import LandingPage from './pages/LandingPage';
+import ChoicePage from './pages/ChoicePage';
 
 export default function App() {
     
@@ -24,7 +24,7 @@ export default function App() {
             />
             <Route
               path="/creation"
-              element={<CreationPage />}
+              element={<ChoicePage />}
             />
           </Route>
         </Routes>
