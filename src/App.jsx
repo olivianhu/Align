@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import Layout from './layout-components/Layout';
 import LandingPage from './pages/LandingPage';
 import ChoicePage from './pages/ChoicePage';
+import SignupPage from './pages/SignupPage';
 
 export default function App() {
     
@@ -21,6 +22,10 @@ export default function App() {
             <Route
               path="/login"
               element={<LoginPage />}
+            />
+            <Route
+              path="/signup"
+              element={<SignupPage />}
             />
             <Route
               path="/creation"

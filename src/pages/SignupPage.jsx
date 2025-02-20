@@ -1,35 +1,40 @@
 import { useState } from "react";
 import { Mail, Lock } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const SignupPage = () => {
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setMessage("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signUp({
       email: input.email,
       password: input.password,
     });
 
     if (error) {
-      setInput({
-        email: "",
-        password: "",
-      });
+      setMessage(error.message);
       return;
     }
 
     if (data) {
-      alert("Successfully logged in!")
-      return null;
+      alert("User account created!");
+      navigate("/login")
     }
-  };
+
+    setInput({
+      email: "",
+      password: ""
+    });
+  }
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -50,12 +55,13 @@ const Login = () => {
     >
       <div className="bg-white p-18 w-[30%] rounded-[50px] text-black text-xl h-[80%] m-10 mb-10 right-10 absolute">
         <form onSubmit={handleSubmit} className="flex flex-col gap-24 justify-center">
-          <div className="flex gap-8 w-[90%] items-center">
-            <h1 className="text-5xl font-semibold">Sign In</h1>
+          <div className="flex gap-6 w-[95%] items-center">
+            <h1 className="text-5xl font-semibold">Sign Up</h1>
             <img src="Group 3.png" alt="" className="w-38 h-10"/>
           </div>
 
           <div className="flex flex-col gap-4">
+            {message && <span>{message}</span>}
             <div className="flex items-center">
               <Mail className="size-6 absolute ml-3"/>
               <input
@@ -76,14 +82,11 @@ const Login = () => {
                 onChange={handleInput}
               />
             </div>
-            <div className="text-md text-[#3558CE]">
-              Forgot password?
-            </div>
           </div>
           
           <div className="text-center flex flex-col gap-3 items-center">
-            <div>Don’t have an account? <Link to="/signup" className="text-[#4672D3]">Sign up</Link></div>
-            <button className="bg-blue px-4 py-3 bg-[#4672D3] rounded-2xl text-white w-32">Log in {'>'}</button>
+            <div>Already have an account? <Link to="/login" className="text-[#4672D3]">Log In</Link></div>
+            <button className="bg-blue px-4 py-3 bg-[#4672D3] rounded-2xl text-white w-32">Sign Up {'>'}</button>
           </div>
         </form>
       </div>
@@ -91,4 +94,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignupPage;
