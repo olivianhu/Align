@@ -3,7 +3,7 @@ import { Mail, Lock } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
 import { Link, useNavigate } from "react-router-dom";
 
-const SignupPage = () => {
+const RegisterPage = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
@@ -27,7 +27,7 @@ const SignupPage = () => {
 
     if (data) {
       alert("User account created!");
-      navigate("/login")
+      navigate("/login");
     }
 
     setInput({
@@ -94,4 +94,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default RegisterPage;

@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
+import backgroundImg from '../assets/background.png';
 
 export default function LandingPage() {
   return(
     <div className="w-full flex flex-col gap-12 h-[92vh] pt-60 pl-160" 
       style={{
-        backgroundImage: "url('background.png')", 
+        backgroundImage: `url(${backgroundImg})`, 
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",

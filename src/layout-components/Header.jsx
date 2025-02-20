@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import icon from "../assets/nav-icon.svg";
 
 export default function Header() {
   return(
@@ -6,7 +7,7 @@ export default function Header() {
       {/*logo*/}
       <Link to={'/'} className="flex items-center gap-2 text-primary">
         <span className='font-medium text-3xl hover:underline'>Align</span>
-        <img src="/nav-icon.svg" className="h-12"/>
+        <img src={icon} className="h-12"/>
       </Link>
 
       <div className="flex gap-3">

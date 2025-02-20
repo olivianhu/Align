@@ -4,7 +4,9 @@ import LoginPage from './pages/LoginPage';
 import Layout from './layout-components/Layout';
 import LandingPage from './pages/LandingPage';
 import ChoicePage from './pages/ChoicePage';
-import SignupPage from './pages/SignupPage';
+import RegisterPage from './pages/RegisterPage';
+import RecurringPage from './pages/RecurringPage';
+import SpecificPage from './pages/SpecificPage';
 
 export default function App() {
     
@@ -25,11 +27,19 @@ export default function App() {
             />
             <Route
               path="/signup"
-              element={<SignupPage />}
+              element={<RegisterPage />}
             />
             <Route
               path="/creation"
               element={<ChoicePage />}
+            />
+            <Route
+              path="/creation/recurring"
+              element={<RecurringPage />}
+            />
+            <Route
+              path="/creation/specific"
+              element={<SpecificPage />}
             />
           </Route>
         </Routes>
