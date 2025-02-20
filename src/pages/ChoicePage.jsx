@@ -35,7 +35,7 @@ export default function ChoicePage() {
             onClick={() => {setChoicePage(false); setRecurring(false)}}
             >Specific event</button>
         </div> 
-      : (isRecurring ? <RecurringPage setChoicePage={setChoicePage} /> : <SpecificPage />)}
+      : (isRecurring ? <RecurringPage setChoicePage={setChoicePage} /> : <SpecificPage setChoicePage={setChoicePage} />)}
     </div>
   )
 }

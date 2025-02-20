@@ -70,8 +70,9 @@ const RecurringPage = ( {setChoicePage} ) => {
       </div>
 
 
-      <div className="bg-[#79A2DC] w-full h-[92vh] flex flex-col gap-12 text-black p-16">
-        <div className="bg-[#FBFBFB] rounded-4xl p-8 flex-1">
+      <div className="bg-[#79A2DC] w-full h-[92vh] flex flex-col gap-10 text-black p-16">
+        <div className="bg-[#FBFBFB] rounded-[60px] p-[8%] flex-1">
+
           {createdMeeting && (
             <div className="p-4 border border-green-500 rounded-md bg-green-100 my-4">
               <h2 className="text-lg font-semibold">Meeting Created!</h2>
@@ -80,24 +81,40 @@ const RecurringPage = ( {setChoicePage} ) => {
               <p><strong>Date Range:</strong> {createdMeeting.date_range}</p>
             </div>
           )}
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <label className="text-2xl font-semibold">Create a new event</label>
-            <input
-                type="text"
-                name="name"
-                placeholder="My Meeting"
-                className="border border-gray-300 rounded-md text-sm px-1"
-                value={meetingData.name}
-                onChange={handleChange}
-              />
+
+          <form className="flex flex-col gap-16" onSubmit={handleSubmit}>
+            <div className="">
+              <div className="flex gap-4 items-center mb-6">
+                <p className="text-3xl font-semibold">Create a new event</p>
+                <img src="Group 4.png" alt="" className="h-8" />
+              </div>
+              <input
+                  type="text"
+                  name="name"
+                  placeholder="Name your event..."
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-lg px-3 py-2 w-100"
+                  value={meetingData.name}
+                  onChange={handleChange}
+                />
+            </div>
 
             <div>
-              <label htmlFor="times">What times?</label>
-              <div className="flex gap-2">
+              <label className="text-3xl font-semibold">What times might work?</label>
+
+              <div className="flex gap-3 mt-6 items-center">
                 <select
                   name="startTime"
                   id="start-time"
-                  className="border border-gray-300 rounded-md"
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-md px-3 py-2 w-24"
+                  style={{
+                    webkitAppearance: 'none',
+                    appearance: 'none',
+                    mozAppearance: 'none',
+                    backgroundImage: "url('https://www.svgrepo.com/show/80156/down-arrow.svg')",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "10px 10px",
+                    backgroundPosition: "calc(100% - 10px)"
+                  }}
                   value={meetingData.startTime}
                   onChange={handleChange}
                 >
@@ -111,7 +128,16 @@ const RecurringPage = ( {setChoicePage} ) => {
                 <select
                   name="endTime"
                   id="end-time"
-                  className="border border-gray-300 rounded-md"
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-md px-3 py-2 w-24"
+                  style={{
+                    webkitAppearance: 'none',
+                    appearance: 'none',
+                    mozAppearance: 'none',
+                    backgroundImage: "url('https://www.svgrepo.com/show/80156/down-arrow.svg')",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "10px 10px",
+                    backgroundPosition: "calc(100% - 10px)"
+                  }}
                   value={meetingData.endTime}
                   onChange={handleChange}
                 >
@@ -125,12 +151,12 @@ const RecurringPage = ( {setChoicePage} ) => {
             </div>
 
             <div>
-              <label htmlFor="dates">What dates?</label>
-              <div className="flex gap-2">
+              <label className="text-3xl font-semibold mb-6">What dates might work?</label>
+              <div className="flex gap-3 mt-6 items-center">
                 <input
                   type="date"
                   name="startDate"
-                  className="border border-gray-300 rounded-md"
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-md px-3 py-2 w-40"
                   value={meetingData.startDate}
                   onChange={handleChange}
                 />
@@ -138,15 +164,15 @@ const RecurringPage = ( {setChoicePage} ) => {
                 <input
                   type="date"
                   name="endDate"
-                  className="border border-gray-300 rounded-md"
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-md px-3 py-2 w-40"
                   value={meetingData.endDate}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
-            <button type="submit" className="bg-[#4672D3] text-white px-4 py-2 rounded-md w-44">
-              Create Meeting
+            <button type="submit" className="bg-[#4672D3] text-white ml-[45%] px-4 py-3 rounded-3xl text-xl w-30">
+              Next {'>'} 
             </button>
           </form>
         </div>
