@@ -11,7 +11,14 @@ export default function ChoicePage() {
     <div>
     {onChoicePage 
       ? 
-        <div className="bg-gray-900 w-full min-h-screen flex flex-col pt-48 gap-8 text-white text-center items-center">
+        <div className="w-full h-[92vh] flex flex-col pt-48 gap-8 text-white text-center items-center"
+          style={{
+            backgroundImage: "url('background.png')", 
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        >
           <div className="text-6xl font-bold">
             Are you looking <br />
             to create a
@@ -28,7 +35,7 @@ export default function ChoicePage() {
             onClick={() => {setChoicePage(false); setRecurring(false)}}
             >Specific event</button>
         </div> 
-      : (isRecurring ? <RecurringPage /> : <SpecificPage />)}
+      : (isRecurring ? <RecurringPage setChoicePage={setChoicePage} /> : <SpecificPage />)}
     </div>
   )
 }
