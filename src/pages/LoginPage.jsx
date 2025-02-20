@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Mail, Lock } from 'lucide-react';
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -31,34 +32,43 @@ const Login = () => {
         backgroundPosition: "center"
       }} 
     >
-      <div className="bg-white p-12 w-[30%] rounded-[50px] text-black text-xl h-[85%] m-10 right-10 absolute">
-        <form onSubmit={handleSubmitEvent} className="flex flex-col gap-3 justify-center">
-          <div className="flex gap-10 w-[90%] items-center">
+      <div className="bg-white p-18 w-[30%] rounded-[50px] text-black text-xl h-[80%] m-10 mb-10 right-10 absolute">
+        <form onSubmit={handleSubmitEvent} className="flex flex-col gap-24 justify-center">
+          <div className="flex gap-8 w-[90%] items-center">
             <h1 className="text-5xl font-semibold">Sign In</h1>
             <img src="Group 3.png" alt="" className="w-38 h-10"/>
           </div>
-          <div>
-            <label htmlFor="user-email">Email:</label>
-            <input
-              type="email"
-              id="user-email"
-              name="email"
-              placeholder="example@gmail.com"
-              className="border border-gray-300 rounded-md text-sm px-1"
-              onChange={handleInput}
-            />
+
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center">
+              <Mail className="size-6 absolute ml-3"/>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
+                onChange={handleInput}
+              />
+            </div>
+            <div className="flex items-center">
+              <Lock className="size-6 absolute ml-3"/>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
+                onChange={handleInput}
+              />
+            </div>
+            <div className="text-md text-[#3558CE]">
+              Forgot password?
+            </div>
           </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="border border-gray-300 rounded-md text-sm px-1"
-              onChange={handleInput}
-            />
+          
+          <div className="text-center flex flex-col gap-3 items-center">
+            <div>Don’t have an account? <a href="" className="text-[#4672D3]">Sign up</a></div>
+            <button className="bg-blue px-4 py-3 bg-[#4672D3] rounded-2xl text-white w-32">Log in {'>'}</button>
           </div>
-          <button className="bg-blue">Submit</button>
         </form>
       </div>
     </div>
