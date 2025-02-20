@@ -16,7 +16,8 @@ export default function ChoicePage() {
             backgroundImage: "url('background.png')", 
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
+            backgroundAttachment: 'fixed',
           }}
         >
           <div className="text-6xl font-bold">
@@ -24,14 +25,14 @@ export default function ChoicePage() {
             to create a
           </div>
           <button 
-            className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium"
+            className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium hover:bg-[#F5BDBC]"
             onClick={() => {setChoicePage(false); setRecurring(true)}}
             >Recurring meeting</button>
           <div className="text-6xl font-bold">
             Or
           </div>
           <button 
-            className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium"
+            className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium hover:bg-[#F5BDBC]"
             onClick={() => {setChoicePage(false); setRecurring(false)}}
             >Specific event</button>
         </div> 
