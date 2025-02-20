@@ -24,7 +24,8 @@ const RecurringPage = ( {setChoicePage} ) => {
       name: `${meetingData.name}`,
       startTime: `${meetingData.startTime}:00:00 EST`, 
       endTime:  `${meetingData.endTime}:00:00 EST`, 
-      dateRange: `[${meetingData.startDate}, ${meetingData.endDate}]`, // daterange
+      startDate: `${meetingData.startDate}`, 
+      endDate: `${meetingData.endDate}`,
       user: 1, // replace with user id
     };
     
@@ -144,7 +145,7 @@ const RecurringPage = ( {setChoicePage} ) => {
               </div>
             </div>
 
-            <button type="submit" className="text-white px-4 py-2 rounded-md w-44">
+            <button type="submit" className="bg-[#4672D3] text-white px-4 py-2 rounded-md w-44">
               Create Meeting
             </button>
           </form>

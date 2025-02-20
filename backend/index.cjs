@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const pool = require("./db.cjs");
+const supabase = require('./supabase.cjs');
 
 
 const app = express()
@@ -19,23 +19,35 @@ app.post("/meetings", async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  const { name, startTime, endTime, dateRange, user } = req.body;
+
+  const { name, startTime, endTime, startDate, endDate, user } = req.body;
 
   try {
-    const query = `
-      INSERT INTO meetings (name, start_time, end_time, date_range, user_id)
-      VALUES ($1, $2, $3, $4::daterange, $5)
-      RETURNING *;
-    `;
+    // supabase insert query
+    const { data, error } = await supabase
+      .from("meetings")
+      .insert([
+        {
+          name,
+          start_time: startTime,
+          end_time: endTime,
+          start_date: startDate,
+          end_date: endDate,
+          user_id: user,
+        },
+      ])
+      .select()
+      .single();
 
-    const values = [name, startTime, endTime, dateRange, user];
-    const result = await pool.query(query, values);
-    // console.log(result);
+    if (error) {
+      console.log("Supabase error:", error);
+      throw error;
+    }
 
-    res.status(201).json(result.rows[0]);
+    res.status(201).json(data);
   } catch (error) {
-    console.error(error);
-    res.status(500);
+    console.error("Error inserting meeting:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
