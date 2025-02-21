@@ -19,8 +19,6 @@ const RecurringPage = () => {
     endDate: "",
   });
 
-  const [createdMeeting, setCreatedMeeting] = useState(null);
-
   const handleChange = (e) => {
     setMeetingData({ ...meetingData, [e.target.name]: e.target.value });
   };
@@ -52,7 +50,7 @@ const RecurringPage = () => {
         console.log("Meeting created successfully");
         const data = await response.json();
         console.log(data);
-        setCreatedMeeting(data);
+        navigate("/viewing");
       } else {
         console.error("Failed to create meeting");
       }
@@ -80,15 +78,6 @@ const RecurringPage = () => {
 
       <div className="bg-[#79A2DC] w-full h-[92vh] flex flex-col gap-10 text-black p-16">
         <div className="bg-[#FBFBFB] rounded-[60px] p-[8%] flex-1">
-
-          {createdMeeting && (
-            <div className="p-4 border border-green-500 rounded-md bg-green-100 my-4">
-              <h2 className="text-lg font-semibold">Meeting Created!</h2>
-              <p><strong>Name:</strong> {createdMeeting.name}</p>
-              <p><strong>Time Range:</strong> {createdMeeting.start_time} to {createdMeeting.end_time}</p>
-              <p><strong>Date Range:</strong> {createdMeeting.date_range}</p>
-            </div>
-          )}
 
           <form className="flex flex-col gap-16" onSubmit={handleSubmit}>
             <div className="">

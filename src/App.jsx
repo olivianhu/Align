@@ -7,6 +7,7 @@ import ChoicePage from './pages/ChoicePage';
 import RegisterPage from './pages/RegisterPage';
 import RecurringPage from './pages/RecurringPage';
 import SpecificPage from './pages/SpecificPage';
+import ViewingPage from './pages/ViewingPage';
 
 export default function App() {
     
@@ -40,6 +41,10 @@ export default function App() {
             <Route
               path="/creation/specific"
               element={<SpecificPage />}
+            />
+            <Route
+              path="/viewing"
+              element={<ViewingPage />}
             />
           </Route>
         </Routes>
