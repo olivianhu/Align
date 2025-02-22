@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Mail, Lock } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
+import backgroundImg from '../assets/background.png';
 import { Link } from "react-router-dom";
+import icons from "../assets/Group 3.png";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -42,7 +44,7 @@ const Login = () => {
   return (
     <div className="w-full h-[92vh] flex flex-col justify-center relative"
       style={{
-        backgroundImage: "url('background.png')", 
+        backgroundImage: `url(${backgroundImg})`, 
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center"
@@ -52,7 +54,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-24 justify-center">
           <div className="flex gap-8 w-[90%] items-center">
             <h1 className="text-5xl font-semibold">Sign In</h1>
-            <img src="Group 3.png" alt="" className="w-38 h-10"/>
+            <img src={icons} alt="" className="w-38 h-10"/>
           </div>
 
           <div className="flex flex-col gap-4">

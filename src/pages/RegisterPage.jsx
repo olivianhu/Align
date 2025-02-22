@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Mail, Lock } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
 import { Link, useNavigate } from "react-router-dom";
+import backgroundImg from '../assets/background.png';
+import icons from "../assets/Group 3.png";
+
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -47,7 +50,7 @@ const RegisterPage = () => {
   return (
     <div className="w-full h-[92vh] flex flex-col justify-center relative"
       style={{
-        backgroundImage: "url('background.png')", 
+        backgroundImage: `url(${backgroundImg})`, 
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center"
@@ -57,7 +60,7 @@ const RegisterPage = () => {
         <form onSubmit={handleSubmit} className="flex flex-col gap-24 justify-center">
           <div className="flex gap-6 w-[95%] items-center">
             <h1 className="text-5xl font-semibold">Sign Up</h1>
-            <img src="Group 3.png" alt="" className="w-38 h-10"/>
+            <img src={icons} alt="" className="w-38 h-10"/>
           </div>
 
           <div className="flex flex-col gap-4">

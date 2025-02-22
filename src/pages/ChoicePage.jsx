@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import backgroundImg from '../assets/background.png';
 
-
 export default function ChoicePage() {
   const navigate = useNavigate();
 
