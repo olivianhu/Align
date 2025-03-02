@@ -5,7 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient("https://culkknkvekdmbvovcllg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1bGtrbmt2ZWtkbWJ2b3ZjbGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3NDI3NDAsImV4cCI6MjA1NTMxODc0MH0.VA_KC1t3z-S8F4SDs9y_1Rq2ImQA_-pEKTMswYYJM2E");
 
 const ViewingPage = () => {
-  const { meetingId } = useParams(); // Get meeting ID from URL
+  // const { meetingId } = useParams(); // Get meeting ID from URL
+  const meetingId = 2;
   const [meeting, setMeeting] = useState(null);
   const [availability, setAvailability] = useState({});
   
