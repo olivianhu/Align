@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, User } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
 import { Link, useNavigate } from "react-router-dom";
 import backgroundImg from '../assets/background.png';
@@ -10,6 +10,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: "",
+    username: "",
     password: "",
   });
   const [message, setMessage] = useState('');
@@ -28,7 +29,15 @@ const RegisterPage = () => {
       return;
     }
 
-    if (data) {
+    console.log(input);
+    const { user } = data;
+    const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([{ id: user.id, name: input.username, email: input.email }]);
+
+    if (profileError) {
+        console.error('Error saving username:', profileError);
+    } else {
       alert("User account created!");
       navigate("/login");
     }
@@ -71,6 +80,16 @@ const RegisterPage = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
+                className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
+                onChange={handleInput}
+              />
+            </div>
+            <div className="flex items-center">
+              <User className="size-6 absolute ml-3"/>
+              <input
+                type="name"
+                name="username"
+                placeholder="Name"
                 className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
                 onChange={handleInput}
               />
