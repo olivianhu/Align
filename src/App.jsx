@@ -8,46 +8,49 @@ import RegisterPage from './pages/RegisterPage';
 import RecurringPage from './pages/RecurringPage';
 import SpecificPage from './pages/SpecificPage';
 import ViewingPage from './pages/ViewingPage';
+import UserContextProvider from './UserContextProvider';
 
 export default function App() {
     
     return (
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={<Layout />}
-          >
+      <UserContextProvider>
+        <Router>
+          <Routes>
             <Route
-              index
-              element={<LandingPage />}
-            />
-            <Route
-              path="/login"
-              element={<LoginPage />}
-            />
-            <Route
-              path="/signup"
-              element={<RegisterPage />}
-            />
-            <Route
-              path="/creation"
-              element={<ChoicePage />}
-            />
-            <Route
-              path="/creation/recurring"
-              element={<RecurringPage />}
-            />
-            <Route
-              path="/creation/specific"
-              element={<SpecificPage />}
-            />
-            <Route
-              path="/viewing"
-              element={<ViewingPage />}
-            />
-          </Route>
-        </Routes>
-      </Router>
+              path="/"
+              element={<Layout />}
+            >
+              <Route
+                index
+                element={<LandingPage />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+              <Route
+                path="/signup"
+                element={<RegisterPage />}
+              />
+              <Route
+                path="/creation"
+                element={<ChoicePage />}
+              />
+              <Route
+                path="/creation/recurring"
+                element={<RecurringPage />}
+              />
+              <Route
+                path="/creation/specific"
+                element={<SpecificPage />}
+              />
+              <Route
+                path="/viewing"
+                element={<ViewingPage />}
+              />
+            </Route>
+          </Routes>
+        </Router>
+       </UserContextProvider>
     )
 }

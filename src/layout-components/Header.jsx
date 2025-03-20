@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import icon from "../assets/nav-icon.svg";
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
 export default function Header() {
+  const { name, isLogged } = useContext(UserContext);
+
   return(
     <header className='flex justify-between items-center'>
       {/*logo*/}
