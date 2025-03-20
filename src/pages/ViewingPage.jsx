@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient("https://culkknkvekdmbvovcllg.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1bGtrbmt2ZWtkbWJ2b3ZjbGxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3NDI3NDAsImV4cCI6MjA1NTMxODc0MH0.VA_KC1t3z-S8F4SDs9y_1Rq2ImQA_-pEKTMswYYJM2E");
+import supabase from '../helper/supabaseClient';
+import Icon from '../assets/Group 5.png';
 
 const ViewingPage = () => {
   // const { meetingId } = useParams(); // Get meeting ID from URL
-  const meetingId = 2;
+  const meetingId = 7;
   const [meeting, setMeeting] = useState(null);
   const [availability, setAvailability] = useState({});
   
@@ -33,19 +32,15 @@ const ViewingPage = () => {
   if (!meeting) return <p>Loading...</p>;
 
   // Generate time slots from startTime to endTime
-  const startTime = parseInt(meeting.startTime);
-  const endTime = parseInt(meeting.endTime);
-  // const startTime = 8;
-  // const endTime = 9;
+  const startTime = parseInt(meeting.start_time);
+  const endTime = parseInt(meeting.end_time);
   const timeSlots = Array.from({ length: endTime - startTime + 1 }, (_, i) => startTime + i);
 
   // Generate dates from startDate to endDate
-  const startDate = new Date(meeting.startDate);
-  const endDate = new Date(meeting.endDate);
-  // const startDate = "2025-03-01";
-  // const endDate = "2025-03-03";
+  const startDate = new Date(meeting.start_date);
+  const endDate = new Date(meeting.end_date);
   const dateSlots = [];
-  let currentDate = new Date(startDate);
+  let currentDate = startDate;
 
   while (currentDate <= endDate) {
     dateSlots.push(new Date(currentDate));
@@ -62,48 +57,50 @@ const ViewingPage = () => {
   };
 
   return (
-    <div className="p-10 bg-[#A7C7E7] min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-8">{meeting.name}</h1>
-
+    <div className="p-10 bg-[#A6C1ED] h-[92vh] grid grid-cols-[3fr_1fr] gap-10">
       {/* Grid Table */}
-      <div className="grid grid-cols-[100px_repeat(auto-fit,minmax(80px,1fr))] gap-2">
-        
-        {/* Header Row: Days */}
-        <div></div> {/* Empty space for time column */}
-        {dateSlots.map((date) => (
-          <div key={date} className="text-center font-bold">{date.toDateString().slice(0, 3)}</div>
-        ))}
-
+      <div className="grid grid-cols-[2fr_4fr_4fr_4fr_4fr_4fr_4fr_4fr_4fr] p-12 bg-[#E8F1FF] rounded-2xl h-80%">
         {/* Time Rows */}
-        {timeSlots.map((time) => (
-          <>
-            <div className="text-right font-bold pr-2">{time % 12 || 12} {time < 12 ? "AM" : "PM"}</div>
-            {dateSlots.map((date) => {
+        <div>
+          {timeSlots.map((time) => (
+            <div key={time}>
+              <div className="text-right pr-2 mt-3 mb-7">{time % 12 || 12} {time < 12 ? "AM" : "PM"}</div>
+            </div>
+          ))}
+        </div>
+        {dateSlots.map((date) => (
+          <div key={date.toISOString()}>
+            <div className="text-center text-lg">{date.toDateString().slice(0, 10)}</div>
+            {timeSlots.map((time) => {
               const key = `${date.toISOString()}-${time}`;
-              return (
-                <div
-                  key={key}
-                  className={`w-16 h-16 border rounded cursor-pointer flex items-center justify-center ${
-                    availability[key] ? "bg-green-500" : "bg-white"
-                  }`}
-                  onClick={() => toggleAvailability(date, time)}
-                />
-              );
+              return(
+              <div
+                key={key}
+                className={`w-full h-12 border cursor-pointer flex items-center justify-center ${
+                  availability[key] ? "bg-green-500" : "bg-white"
+                }`}
+                onClick={() => toggleAvailability(date, time)}
+              />)
             })}
-          </>
-        ))}
+          </div>
+          ))}
       </div>
-
-      {/* Availability Legend */}
-      <div className="mt-6 flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-green-500 border rounded"></div>
-          <span>Yes, I'm Available</span>
+      
+      <div className="flex flex-col items-center">
+        <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
+        {/* Availability Legend */}
+        <div className="mt-6 flex flex-col space-x-4 bg-white p-8 rounded-xl gap-5">
+          <span className="text-2xl">Priority/Non-Priority</span>
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-8 bg-green-500 border rounded"></div>
+            <span className="text-2xl">Yes, I'm Available</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-8 bg-red-500 border rounded"></div>
+            <span className="text-2xl">Only If Needed...</span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-gray-300 border rounded"></div>
-          <span>Not Selected</span>
-        </div>
+        <img src={Icon} alt="" className="w-50 mt-20"/>
       </div>
     </div>
   );
