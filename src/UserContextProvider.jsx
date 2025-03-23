@@ -13,7 +13,6 @@ export function UserContextProvider( {children} ) {
       setReady(true);
     }
   }, [name])
-
   UserContextProvider.propTypes = {
     children: PropTypes.node.isRequired,
   };
