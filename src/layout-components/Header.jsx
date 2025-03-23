@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import icon from "../assets/nav-icon.svg";
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
 export default function Header() {
+  const { name, isLogged } = useContext(UserContext);
   return(
     <header className='flex justify-between items-center'>
       {/*logo*/}
@@ -10,12 +14,9 @@ export default function Header() {
       </Link>
 
       <div className="flex gap-3">
-        <Link to={'/login'}>
-          <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Sign In</button>
-        </Link>
-        <Link to={'/account'}>
-          <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Account</button>
-        </Link>
+      {isLogged ? <div className="rounded-full bg-black text-white py-2 px-4">{name}</div>
+       : <Link to={'/login'}>
+       <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Sign In</button></Link>}
       </div>
     </header>
   )

@@ -20,7 +20,7 @@ app.post("/meetings", async (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  const { name, startTime, endTime, startDate, endDate, user } = req.body;
+  const { name, startTime, endTime, startDate, endDate, userId } = req.body;
 
   try {
     // supabase insert query
@@ -33,7 +33,7 @@ app.post("/meetings", async (req, res) => {
           end_time: endTime,
           start_date: startDate,
           end_date: endDate,
-          user_id: user,
+          user_id: userId,
         },
       ])
       .select()
