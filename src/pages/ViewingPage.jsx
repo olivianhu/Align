@@ -49,8 +49,6 @@ const ViewingPage = () => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  console.log(dateSlots);
-
   // Handle cell click to toggle availability
   const toggleAvailability = (day, time) => {
     const key = `${day.toISOString()}-${time}`;
