@@ -49,8 +49,7 @@ const RecurringPage = () => {
       if (response.ok) {
         console.log("Meeting created successfully");
         const data = await response.json();
-        console.log(data);
-        navigate("/viewing");
+        navigate("/viewing/" + data.id);
       } else {
         console.error("Failed to create meeting");
       }
