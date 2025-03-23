@@ -169,7 +169,7 @@ const RecurringPage = () => {
             </div>
 
             <button type="submit" className="bg-[#4672D3] text-white ml-[45%] px-4 py-3 rounded-3xl text-xl w-30"
-              onClick={() => {navigate("/creation/viewing")}}>
+              onClick={() => {navigate("/viewing")}}>
               Next {'>'} 
             </button>
           </form>

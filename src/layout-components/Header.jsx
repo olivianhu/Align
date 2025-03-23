@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import icon from "../assets/nav-icon.svg";
 
 export default function Header() {
   return(
@@ -13,6 +12,9 @@ export default function Header() {
       <div className="flex gap-3">
         <Link to={'/login'}>
           <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Sign In</button>
+        </Link>
+        <Link to={'/account'}>
+          <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Account</button>
         </Link>
       </div>
     </header>

@@ -8,6 +8,8 @@ import RegisterPage from './pages/RegisterPage';
 import RecurringPage from './pages/RecurringPage';
 import SpecificPage from './pages/SpecificPage';
 import ViewingPage from './pages/ViewingPage';
+import AccountViewingPage from './pages/AccountViewingPage';
+import AccountEditPage from './pages/AccountEditPage';
 
 export default function App() {
     
@@ -46,6 +48,15 @@ export default function App() {
               path="/viewing"
               element={<ViewingPage />}
             />
+            <Route
+              path="/account"
+              element={<AccountViewingPage />}
+            />
+            <Route
+              path="/account/edit"
+              element={<AccountEditPage />}
+            />
+
           </Route>
         </Routes>
       </Router>
