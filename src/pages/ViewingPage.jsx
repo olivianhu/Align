@@ -4,8 +4,7 @@ import supabase from '../helper/supabaseClient';
 import Icon from '../assets/Group 5.png';
 
 const ViewingPage = () => {
-  // const { meetingId } = useParams(); // Get meeting ID from URL
-  const meetingId = 7;
+  const { meetingId } = useParams(); // Get meeting ID from URL
   const [meeting, setMeeting] = useState(null);
   const [availability, setAvailability] = useState({});
   
@@ -38,7 +37,10 @@ const ViewingPage = () => {
 
   // Generate dates from startDate to endDate
   const startDate = new Date(meeting.start_date);
+  startDate.setDate(startDate.getDate() + 1);
   const endDate = new Date(meeting.end_date);
+  endDate.setDate(endDate.getDate() + 1);
+
   const dateSlots = [];
   let currentDate = startDate;
 
@@ -93,7 +95,7 @@ const ViewingPage = () => {
           <span className="text-2xl">Priority/Non-Priority</span>
           <div className="flex items-center gap-4">
             <div className="w-8 h-8 bg-green-500 border rounded"></div>
-            <span className="text-2xl">Yes, I'm Available</span>
+            <span className="text-2xl">Yes, I&apos;m Available</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="w-8 h-8 bg-red-500 border rounded"></div>
@@ -106,25 +108,25 @@ const ViewingPage = () => {
   );
 };
 
-const toggleAvailability = async (day, time) => {
-  const key = `${day.toISOString()}-${time}`;
-  const newStatus = !availability[key];
+// const toggleAvailability = async (day, time) => {
+//   const key = `${day.toISOString()}-${time}`;
+//   const newStatus = !availability[key];
 
-  setAvailability((prev) => ({
-    ...prev,
-    [key]: newStatus,
-  }));
+//   setAvailability((prev) => ({
+//     ...prev,
+//     [key]: newStatus,
+//   }));
 
-  // Save to Supabase
-  await supabase.from("availability").upsert([
-    {
-      user_id: meeting.user,
-      meeting_id: meeting.id,
-      date: day.toISOString().split("T")[0],
-      time: time,
-      status: newStatus ? "available" : "unavailable",
-    },
-  ]);
-};
+//   // Save to Supabase
+//   await supabase.from("availability").upsert([
+//     {
+//       user_id: meeting.user,
+//       meeting_id: meeting.id,
+//       date: day.toISOString().split("T")[0],
+//       time: time,
+//       status: newStatus ? "available" : "unavailable",
+//     },
+//   ]);
+// };
 
 export default ViewingPage;

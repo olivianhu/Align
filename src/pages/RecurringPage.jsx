@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PropTypes from 'prop-types';
 import { useNavigate } from "react-router-dom";
 import belowButtonImg from "../assets/Group 2.png";
 import nextHeaderImg from "../assets/Group 4.png";
+import { UserContext } from "../UserContext";
 
 const RecurringPage = () => {
   const navigate = useNavigate();
+  const { userId } = useContext(UserContext);
 
   const handleClick = () => {
     navigate('/creation'); 
@@ -32,10 +34,9 @@ const RecurringPage = () => {
       endTime:  `${meetingData.endTime}:00:00 EST`, 
       startDate: `${meetingData.startDate}`, 
       endDate: `${meetingData.endDate}`,
-      user: 1, // replace with user id
+      userId: userId, // replace with user id
     };
     
-    // console.log(requestBody);
 
     try {
       const response = await fetch("http://localhost:5000/meetings", {
@@ -49,8 +50,7 @@ const RecurringPage = () => {
       if (response.ok) {
         console.log("Meeting created successfully");
         const data = await response.json();
-        console.log(data);
-        navigate("/viewing");
+        navigate("/viewing/" + data.id);
       } else {
         console.error("Failed to create meeting");
       }
@@ -168,8 +168,7 @@ const RecurringPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="bg-[#4672D3] text-white ml-[45%] px-4 py-3 rounded-3xl text-xl w-30"
-              onClick={() => {navigate("/creation/viewing")}}>
+            <button type="submit" className="bg-[#4672D3] text-white ml-[45%] px-4 py-3 rounded-3xl text-xl w-30">
               Next {'>'} 
             </button>
           </form>

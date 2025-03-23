@@ -45,12 +45,12 @@ export default function App() {
                 element={<SpecificPage />}
               />
               <Route
-                path="/viewing"
+                path="/viewing/:meetingId"
                 element={<ViewingPage />}
               />
             </Route>
           </Routes>
         </Router>
-       </UserContextProvider>
+      </UserContextProvider>
     )
 }

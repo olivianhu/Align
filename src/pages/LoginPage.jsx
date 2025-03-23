@@ -2,12 +2,13 @@ import { useState, useContext } from "react";
 import { Mail, Lock } from 'lucide-react';
 import supabase from '../helper/supabaseClient'
 import backgroundImg from '../assets/background.png';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import icons from "../assets/Group 3.png";
 import { UserContext } from "../UserContext";
 
 const Login = () => {
-  const { setEmail, setName, setIsLogged } = useContext(UserContext);
+  const navigate = useNavigate();
+  const { setEmail, setName, setIsLogged, setUserId } = useContext(UserContext);
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -35,7 +36,7 @@ const Login = () => {
 
       const { data, error } = await supabase
           .from('profiles') 
-          .select('name') 
+          .select('name, id') 
           .eq('email', input.email) 
           .single(); 
 
@@ -44,8 +45,11 @@ const Login = () => {
         return;
       }
 
+      console.log(data)
       setName(data.name);
+      setUserId(data.id);
       setIsLogged(true);
+      navigate("/");
       return null;
     }
   };
