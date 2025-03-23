@@ -50,55 +50,17 @@ export default function App() {
                 path="/viewing/:meetingId"
                 element={<ViewingPage />}
               />
+              <Route
+                path="/account"
+                element={<AccountViewingPage />}
+              />
+              <Route
+                path="/account/edit"
+                element={<AccountEditPage />}
+              />
             </Route>
           </Routes>
         </Router>
       </UserContextProvider>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={<Layout />}
-          >
-            <Route
-              index
-              element={<LandingPage />}
-            />
-            <Route
-              path="/login"
-              element={<LoginPage />}
-            />
-            <Route
-              path="/signup"
-              element={<RegisterPage />}
-            />
-            <Route
-              path="/creation"
-              element={<ChoicePage />}
-            />
-            <Route
-              path="/creation/recurring"
-              element={<RecurringPage />}
-            />
-            <Route
-              path="/creation/specific"
-              element={<SpecificPage />}
-            />
-            <Route
-              path="/viewing"
-              element={<ViewingPage />}
-            />
-            <Route
-              path="/account"
-              element={<AccountViewingPage />}
-            />
-            <Route
-              path="/account/edit"
-              element={<AccountEditPage />}
-            />
-
-          </Route>
-        </Routes>
-      </Router>
     )
 }
