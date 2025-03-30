@@ -18,7 +18,7 @@ export default function Header() {
       <div className="flex gap-3">
         <Link to={'/'}>
         <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Your Meetings</button></Link>
-        <Link to={'/account/edit'}>
+        <Link to={'/account'}>
         <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Account</button></Link>
       </div>
        : <Link to={'/login'}>

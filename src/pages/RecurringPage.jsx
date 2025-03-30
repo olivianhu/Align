@@ -66,11 +66,7 @@ const RecurringPage = () => {
           <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z" clipRule="evenodd" />
         </svg>
         <div className="flex flex-col text-center items-center">
-          <div className="text-4xl font-bold pt-12 mb-16">
-            Are you looking <br />
-            to creating a 
-          </div>
-          <div className="bg-[#79A2DC] w-80 text-3xl py-6 rounded-full text-medium text-white text-center mb-24">Recurring meeting</div>
+        <div className="w-80 text-5xl font-bold text-black text-center mt-28 mb-24">Recurring meeting</div>
           <img src={belowButtonImg} className="w-80" />
         </div>
       </div>

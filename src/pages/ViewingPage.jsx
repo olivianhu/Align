@@ -62,15 +62,12 @@ const ViewingPage = () => {
   const [meeting, setMeeting] = useState(null);
   const [availability, setAvailability] = useState({});
   const [viewing, setViewing] = useState(false);
+  const [availabilityCounts, setAvailabilityCounts] = useState({});
 
   const handleToggle = (event) => {
     setViewing(event.target.checked);
   };
   
-  useEffect(() => { 
-    console.log("avail",availability);
-  }, [availability]);
-
 
   useEffect(() => {
     const fetchMeetingData = async () => {
@@ -89,13 +86,11 @@ const ViewingPage = () => {
     };
 
     const fetchAvailabilities = async () => {
-      console.log("userId", userId);
-
       const { data: availabilityData, error: availabilityError } = await supabase
         .from("availability")
         .select("date, start_time, available")
         .eq("meeting_id", meetingId)
-        // .eq("user_id", userId);
+        .eq("user_id", userId);
 
       if (availabilityError) {
         console.error("Error fetching availabilities:", availabilityError);
@@ -108,14 +103,32 @@ const ViewingPage = () => {
         availabilityMap[key] = available;
       });
 
-      console.log("availabilityMap", availabilityMap);
-      console.log("availabilityData", availabilityData);
+      const { data: countData } = await supabase
+        .from("availability")
+        .select("date, start_time, available, user_id")
+        .eq("meeting_id", meetingId)
+
+      // console.log("countData", countData);
+      const counts = {};
+      countData.forEach(({ date, start_time, available, user_id }) => {
+        const key = `${date}-${parseInt(start_time.split(":")[0])}`;
+        const prev = counts[key];
+        if (prev && available) {
+          counts[key] = [...prev, user_id];
+        } else {
+          counts[key] = [user_id];
+        }
+      });
+
       setAvailability(availabilityMap);
+      setAvailabilityCounts(counts);
     };
 
     fetchMeetingData();
-    fetchAvailabilities();
-  }, [meetingId, userId]);
+    if (meetingId && userId) {
+      fetchAvailabilities();
+    }
+  }, [meetingId, userId, availability]);
 
   if (!meeting) return <p>Loading...</p>;
 
@@ -152,13 +165,14 @@ const ViewingPage = () => {
       .select("id")
       .eq("meeting_id", meetingId)
       .eq("date", day.toISOString().split("T")[0])
-      .eq("start_time", `${time}:00:00 EST`);
+      .eq("start_time", `${time}:00:00 EST`)
+      .eq("user_id", userId);
 
     if (fetchError) {
       console.error("Error fetching availabilities:", fetchError);
       return;
     }
-    // console.log("avail listing", availability[key]);
+    console.log("avail listing", availabilityData);
 
     // Save to Supabase
     if (availabilityData.length > 0) {
@@ -179,6 +193,7 @@ const ViewingPage = () => {
         return;
       }
     } else {
+      console.log("No availability found, inserting new record");
       const {error: postError} = await supabase.from("availability").insert([
         {
           user_id: userId,
@@ -195,6 +210,13 @@ const ViewingPage = () => {
         return;
       }
     }
+  };
+
+  const getGradientColor = (count, maxCount) => {
+    if (count === 0) return "white"; 
+    const intensity = Math.min(1, count / maxCount); // Normalize to [0,1]
+    const color = `rgba(34, 197, 94, ${intensity})`; // Green with opacity
+    return color;
   };
 
   return (
@@ -222,15 +244,17 @@ const ViewingPage = () => {
               <div key={date.toISOString()}>
                 <div className="text-center text-lg">{date.toDateString().slice(0, 10)}</div>
                 {timeSlots.map((time) => {
-                  const key = `${date.toISOString()}-${time}:00:00-05`;
-                  return(
-                  <div
-                    key={key}
-                    className={`w-full h-12 border cursor-pointer flex items-center justify-center ${
-                      availability[key] ? "bg-green-500" : "bg-white"
-                    }`}
-                    onClick={() => toggleAvailability(date, time)}
-                  />)
+                  const key = `${date.toISOString().split("T")[0]}-${time}`;
+                  const count = availabilityCounts[key] == undefined ? 0 : availabilityCounts[key].length;
+                  return (
+                    <div
+                      key={key}
+                      className="w-full h-12 border cursor-pointer flex items-center justify-center"
+                      style={{backgroundColor: getGradientColor(count, 5)}} 
+                    >
+                      {count > 0 && <span className="text-black">{count}</span>}
+                    </div>
+                  );
                 })}
               </div>
               ))}
@@ -239,15 +263,17 @@ const ViewingPage = () => {
           <div className="flex flex-col items-center">
             <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
             {/* Availability Legend */}
-            <div className="mt-6 flex flex-col space-x-4 bg-white p-8 rounded-xl gap-5">
-              <span className="text-2xl">Priority/Non-Priority</span>
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 bg-green-500 border rounded"></div>
-                <span className="text-2xl">Yes, I&apos;m Available</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 bg-red-500 border rounded"></div>
-                <span className="text-2xl">Only If Needed...</span>
+            <div className="mt-6 bg-white p-8 rounded-xl gap-5">
+              <div className="flex justify-center gap-4">
+                <div className="">
+                  <span className="text-2xl">Available</span>
+                </div>
+                <div className="">
+                  <span className="text-2xl">Maybe</span>
+                </div>
+                <div className="">
+                  <span className="text-2xl">Unavailable</span>
+                </div>
               </div>
             </div>
             <img src={Icon} alt="" className="w-50 mt-20"/>

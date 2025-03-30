@@ -4,14 +4,11 @@ import { useNavigate } from "react-router-dom";
 export default function EditAccountPage() {
   const navigate = useNavigate();
 
-  // Placeholder user data – later this can be fetched from Supabase
-  const [username, setUsername] = useState("123456");
-  const [email, setEmail] = useState("123456@gmail.com");
-  const usernameChangesLeft = 3; // Replace with real logic later
+  const [name, setName] = useState("Bob");
+  const [email, setEmail] = useState("bob@gmail.com");
 
   const handleSave = () => {
-    // Save logic here (e.g., Supabase update)
-    console.log("Saving...", { username, email });
+    console.log("Saving...", { name, email });
     navigate("/account"); // Navigate back after saving
   };
 
@@ -26,16 +23,13 @@ export default function EditAccountPage() {
 
         {/* Username Input */}
         <div className="mb-6">
-          <label htmlFor="username" className="block text-lg font-semibold mb-2">Username</label>
+          <label htmlFor="username" className="block text-lg font-semibold mb-2">Name</label>
           <input
             id="username"
             className="w-full border border-black rounded px-4 py-2"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-          <p className="text-sm mt-2 text-gray-600">
-            We allow 3 username changes per month. You have {usernameChangesLeft} changes remaining.
-          </p>
         </div>
 
         {/* Email Input */}
@@ -50,7 +44,7 @@ export default function EditAccountPage() {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-4">
+        <div className="flex gap-4 text-sm">
           <button
             onClick={handleSave}
             className="bg-[#B8EBA8] text-black font-semibold px-6 py-2 rounded hover:bg-[#A0DB8E] transition"
