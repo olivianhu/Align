@@ -1,6 +1,7 @@
 import {useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { UserContext } from './UserContext';
+import supabase from "./helper/supabaseClient";
 
 export function UserContextProvider( {children} ) {
   const [email, setEmail] = useState("");
@@ -17,6 +18,27 @@ export function UserContextProvider( {children} ) {
   UserContextProvider.propTypes = {
     children: PropTypes.node.isRequired,
   };
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log("session", session);
+      if (session) {
+        setUserId(session.user.id);
+      }
+    };
+
+    getSession();
+
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUserId(session?.user.id ?? null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   return(
     <UserContext.Provider value={{email, setEmail, name, setName, isLogged, setIsLogged, ready, setReady, userId, setUserId}}>

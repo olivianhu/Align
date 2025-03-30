@@ -4,7 +4,7 @@ import { UserContext } from "../UserContext";
 import { useContext } from "react";
 
 export default function Header() {
-  const { name, isLogged } = useContext(UserContext);
+  const { userId } = useContext(UserContext);
   return(
     <header className='flex justify-between items-center'>
       {/*logo*/}
@@ -14,7 +14,13 @@ export default function Header() {
       </Link>
 
       <div className="flex gap-3">
-      {isLogged ? <div className="rounded-full bg-black text-white py-2 px-4">{name}</div>
+      {userId ? 
+      <div className="flex gap-3">
+        <Link to={'/'}>
+        <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Your Meetings</button></Link>
+        <Link to={'/account/edit'}>
+        <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Account</button></Link>
+      </div>
        : <Link to={'/login'}>
        <button className="rounded-full bg-black text-white py-2 px-4 hover:bg-[#F8EA5C] hover:text-black">Sign In</button></Link>}
       </div>
