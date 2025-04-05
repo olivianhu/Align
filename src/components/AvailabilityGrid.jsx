@@ -1,5 +1,6 @@
 // import Icon from '../assets/Group 5.png';
 import PropTypes from 'prop-types';
+import SignUpModal from './SignUpModal';
 
 const AvailabilityGrid = ({ 
   meeting, 
@@ -8,7 +9,9 @@ const AvailabilityGrid = ({
   availabilityCounts, 
   allAvailability, 
   setHoverInfo,
-  toggleAvailability
+  toggleAvailability,
+  showModal,
+  handleSignUp,
 }) => {
   // Generate time slots from startTime to endTime
   const startTime = parseInt(meeting.start_time);
@@ -50,6 +53,7 @@ const AvailabilityGrid = ({
       
       {dateSlots.map((date) => (
         <div key={date.toISOString()}>
+          {!viewing && <SignUpModal open={showModal} onSignUp={handleSignUp} />}  
           <div className="text-center text-lg">
             {date.toDateString().slice(0, 10)}
           </div>
@@ -107,6 +111,8 @@ AvailabilityGrid.propTypes = {
   allAvailability: PropTypes.object.isRequired,
   setHoverInfo: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
+  showModal: PropTypes.bool.isRequired,
+  handleSignUp: PropTypes.func.isRequired,
 };
 
 export default AvailabilityGrid;

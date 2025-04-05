@@ -19,6 +19,7 @@ export function UserContextProvider( {children} ) {
     children: PropTypes.node.isRequired,
   };
 
+
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -33,7 +34,6 @@ export function UserContextProvider( {children} ) {
           .select("name")
           .eq("id", session.user.id)
           .single();
-        // console.log("user", data);
         setName(data.name);
       }
     };
@@ -48,7 +48,7 @@ export function UserContextProvider( {children} ) {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [userId]);
 
   return(
     <UserContext.Provider value={{email, setEmail, name, setName, isLogged, setIsLogged, ready, setReady, userId, setUserId}}>

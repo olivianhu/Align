@@ -2,20 +2,22 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import supabase from '../helper/supabaseClient';
 import { UserContext } from "../UserContext";
-import AvailabilityGrid from "./AvailabilityGrid";
-import MeetingInfoPanel from "./MeetingInfoPanel";
-import ViewToggleSwitch from "./ViewToggleSwitch";
+import AvailabilityGrid from "../components/AvailabilityGrid";
+import MeetingInfoPanel from "../components/MeetingInfoPanel";
+import ViewToggleSwitch from "../components/ViewToggleSwitch";
 import FormControlLabel from '@mui/material/FormControlLabel';
+// import SignUpModal from "../components/SignUpModal";
 
 const ViewingPage = () => {
-  const { userId } = useContext(UserContext);
+  const { userId, setUserId } = useContext(UserContext);
   const { meetingId } = useParams();
   const [meeting, setMeeting] = useState(null);
   const [availability, setAvailability] = useState({});
-  const [viewing, setViewing] = useState(false);
+  const [viewing, setViewing] = useState(true);
   const [availabilityCounts, setAvailabilityCounts] = useState({});
   const [hoverInfo, setHoverInfo] = useState(null);
   const [allAvailability, setAllAvailability] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   const handleToggle = (event) => {
     setViewing(event.target.checked);
@@ -115,7 +117,11 @@ const ViewingPage = () => {
         const key = `${new Date(date).toISOString()}-${start_time}`;
         availabilityMap[key] = available;
       });
-  
+
+      setAvailability(availabilityMap);
+    };
+
+    const fetchAvailabilityCounts = async () => {
       // Fetch all availabilities for the meeting
       const { data: countData, error: countError } = await supabase
         .from("availability")
@@ -160,46 +166,96 @@ const ViewingPage = () => {
   
         all[name] = { name, available }; 
       });
-  
-      setAvailability(availabilityMap);
+
       setAvailabilityCounts(counts);
       setAllAvailability(all);
-    };
+    }
   
     fetchMeetingData();
-    if (meetingId && userId) {
+    if (!userId) {
+      setShowModal(true);
+    } else if (meetingId) {
       fetchAvailabilities();
     }
+    fetchAvailabilityCounts();
   }, [meetingId, userId, availability]); 
+
+  const handleSignUp = async (name, email, password) => {
+    // Try to find user by email first
+    const { data: existing, error: fetchError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("email", email)
+      .maybeSingle();
+  
+    if (fetchError) {
+      console.error("Error checking existing user:", fetchError);
+      return;
+    }
+  
+    let user;
+    if (existing) {
+      user = existing;
+    } else {
+      const { data: registeredUser, error:registerError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+      });
+
+      if (registerError) {
+        console.error("Error signing up:", registerError);
+        return;
+      }
+      user = registeredUser.user;
+
+      const { error: insertError } = await supabase
+        .from("profiles")
+        .insert({ id: user.id, name, email })
+        .select()
+        .single();
+  
+      if (insertError) {
+        console.error("Error creating user:", insertError);
+        return;
+      }
+    }
+  
+    setUserId(user.id);
+    setShowModal(false);
+  };  
 
   if (!meeting) return <p>Loading...</p>;
 
   return (
-    <div className="p-10 bg-[#A6C1ED] h-[92vh] text-center">
-      <FormControlLabel
-        control={<ViewToggleSwitch checked={viewing} onChange={handleToggle} />}
-        label=""
-        className="mb-4"
-      />
+    <>
+      <div className="p-10 bg-[#A6C1ED] h-[92vh] text-center">
+        <FormControlLabel
+          control={<ViewToggleSwitch checked={viewing} onChange={handleToggle} />}
+          label=""
+          className="mb-4"
+        />
 
-      <div className="grid grid-cols-[3fr_1fr] gap-10">
-        <AvailabilityGrid
-          meeting={meeting}
-          viewing={viewing}
-          availability={availability}
-          availabilityCounts={availabilityCounts}
-          allAvailability={allAvailability}
-          setHoverInfo={setHoverInfo}
-          toggleAvailability={toggleAvailability}
-        />
-        
-        <MeetingInfoPanel 
-          meeting={meeting}
-          viewing={viewing}
-          hoverInfo={hoverInfo}
-        />
+        <div className="grid grid-cols-[3fr_1fr] gap-10">
+          <AvailabilityGrid
+            meeting={meeting}
+            viewing={viewing}
+            availability={availability}
+            availabilityCounts={availabilityCounts}
+            allAvailability={allAvailability}
+            setHoverInfo={setHoverInfo}
+            toggleAvailability={toggleAvailability}
+            showModal={showModal}
+            onSignUp={handleSignUp}
+          />
+          
+          <MeetingInfoPanel 
+            meeting={meeting}
+            viewing={viewing}
+            hoverInfo={hoverInfo}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
