@@ -63,11 +63,13 @@ const ViewingPage = () => {
   const [availability, setAvailability] = useState({});
   const [viewing, setViewing] = useState(false);
   const [availabilityCounts, setAvailabilityCounts] = useState({});
+  const [hoverInfo, setHoverInfo] = useState(null);
+  const [allAvailability, setAllAvailability] = useState({});
 
   const handleToggle = (event) => {
     setViewing(event.target.checked);
   };
-  
+
 
   useEffect(() => {
     const fetchMeetingData = async () => {
@@ -76,59 +78,90 @@ const ViewingPage = () => {
         .select("*")
         .eq("id", meetingId)
         .single();
-
+  
       if (meetingError) {
         console.error("Error fetching meeting:", meetingError);
         return;
       }
-
+  
       setMeeting(meetingData);
     };
-
+  
     const fetchAvailabilities = async () => {
+      // Fetch this user's availability
       const { data: availabilityData, error: availabilityError } = await supabase
         .from("availability")
         .select("date, start_time, available")
         .eq("meeting_id", meetingId)
         .eq("user_id", userId);
-
+  
       if (availabilityError) {
         console.error("Error fetching availabilities:", availabilityError);
         return;
       }
-
+  
       const availabilityMap = {};
       availabilityData.forEach(({ date, start_time, available }) => {
         const key = `${new Date(date).toISOString()}-${start_time}`;
         availabilityMap[key] = available;
       });
-
-      const { data: countData } = await supabase
+  
+      // Fetch all availabilities for the meeting
+      const { data: countData, error: countError } = await supabase
         .from("availability")
         .select("date, start_time, available, user_id")
-        .eq("meeting_id", meetingId)
-
-      // console.log("countData", countData);
+        .eq("meeting_id", meetingId);
+  
+      if (countError) {
+        console.error("Error fetching availability counts:", countError);
+        return;
+      }
+  
+      // Get all unique user IDs
+      const uniqueUserIds = [...new Set(countData.map(d => d.user_id))];
+  
+      // Batch-fetch all profile names
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, name")
+        .in("id", uniqueUserIds);
+  
+      if (profileError) {
+        console.error("Error fetching profiles:", profileError);
+        return;
+      }
+  
+      const profileMap = {};
+      profileData.forEach(p => {
+        profileMap[p.id] = p.name;
+      });
+  
       const counts = {};
+      const all = {};
+  
       countData.forEach(({ date, start_time, available, user_id }) => {
         const key = `${date}-${parseInt(start_time.split(":")[0])}`;
-        const prev = counts[key];
-        if (prev && available) {
-          counts[key] = [...prev, user_id];
-        } else {
-          counts[key] = [user_id];
-        }
+        const name = profileMap[user_id];
+  
+        if (!name) return;
+  
+        if (!counts[key]) counts[key] = [];
+        if (available) counts[key].push({ name });
+  
+        all[name] = { name, available }; 
       });
-
+  
       setAvailability(availabilityMap);
       setAvailabilityCounts(counts);
+      setAllAvailability(all);
     };
-
+  
     fetchMeetingData();
     if (meetingId && userId) {
       fetchAvailabilities();
     }
-  }, [meetingId, userId, availability]);
+  }, [meetingId, userId, availability]); 
+  
 
   if (!meeting) return <p>Loading...</p>;
 
@@ -249,8 +282,15 @@ const ViewingPage = () => {
                   return (
                     <div
                       key={key}
-                      className="w-full h-12 border cursor-pointer flex items-center justify-center"
-                      style={{backgroundColor: getGradientColor(count, 5)}} 
+                      className="w-full h-12 border cursor-pointer flex items-center justify-center relative"
+                      style={{ backgroundColor: getGradientColor(count, Object.values(allAvailability).length) }}
+                      onMouseEnter={() => {
+                        const available = availabilityCounts[key] || [];
+                        const allPeople = Object.values(allAvailability);
+                        const unavailable = allPeople.filter(p => !available.some(a => a.name == p.name));
+                        setHoverInfo({ available, unavailable });
+                      }}
+                      onMouseLeave={() => setHoverInfo(null)}
                     >
                       {count > 0 && <span className="text-black">{count}</span>}
                     </div>
@@ -263,18 +303,37 @@ const ViewingPage = () => {
           <div className="flex flex-col items-center">
             <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
             {/* Availability Legend */}
-            <div className="mt-6 bg-white p-8 rounded-xl gap-5">
-              <div className="flex justify-center gap-4">
-                <div className="">
-                  <span className="text-2xl">Available</span>
+            <div className="mt-6 bg-white p-8 rounded-xl gap-5 w-full">
+              {hoverInfo ? (
+                <>
+                  <div className="flex justify-around">
+                    <div>
+                      <h2 className="text-lg font-bold mb-1">Available</h2>
+                      {hoverInfo.available.length > 0 ? (
+                        hoverInfo.available.map((person, idx) => (
+                          <div key={idx} className="text-gray-700">{person.name}</div>
+                        ))
+                      ) : (
+                        <div className="text-gray-400 italic">No one available</div>
+                      )}
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold mb-1">Unavailable</h2>
+                      {hoverInfo.unavailable.length > 0 ? (
+                        hoverInfo.unavailable.map((person, idx) => (
+                          <div key={idx} className="text-gray-700">{person.name}</div>
+                        ))
+                      ) : (
+                        <div className="text-gray-400 italic">No one unavailable</div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center text-lg text-gray-500 italic">
+                  Hover over a time slot to see who is available.
                 </div>
-                <div className="">
-                  <span className="text-2xl">Maybe</span>
-                </div>
-                <div className="">
-                  <span className="text-2xl">Unavailable</span>
-                </div>
-              </div>
+              )}
             </div>
             <img src={Icon} alt="" className="w-50 mt-20"/>
           </div>
