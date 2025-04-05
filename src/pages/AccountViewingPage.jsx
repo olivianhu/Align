@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import supabase from "../helper/supabaseClient";
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
 
 export default function UserSettingsPage() {
   const navigate = useNavigate();
+  const { userId, name, email } = useContext(UserContext);
 
-  // Placeholder user info — replace with real user data from context or Supabase
   const user = {
-    name: "Bob",
-    email: "bob@gmail.com"
+    id: userId,
+    name: name,
+    email: email
   };
 
   const handleSignOut = async () => {

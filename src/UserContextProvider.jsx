@@ -25,6 +25,16 @@ export function UserContextProvider( {children} ) {
       console.log("session", session);
       if (session) {
         setUserId(session.user.id);
+        setEmail(session.user.email);
+        setIsLogged(true);
+        
+        const { data } = await supabase
+          .from("profiles")
+          .select("name")
+          .eq("id", session.user.id)
+          .single();
+        // console.log("user", data);
+        setName(data.name);
       }
     };
 

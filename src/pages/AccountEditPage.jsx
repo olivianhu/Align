@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import supabase from "../helper/supabaseClient";
+import { UserContext } from "../UserContext"; 
 
 export default function EditAccountPage() {
   const navigate = useNavigate();
+  const { userId, name, email, setName, setEmail } = useContext(UserContext); 
 
-  const [name, setName] = useState("Bob");
-  const [email, setEmail] = useState("bob@gmail.com");
+  const [newName, setNewName] = useState(name);
+  const [newEmail, setNewEmail] = useState(email);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("Saving...", { name, email });
-    navigate("/account"); // Navigate back after saving
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ name: newName, email: newEmail })
+      .eq("id", userId); // Replace with the actual user ID
+
+    if (error) {
+      console.error("Error saving data:", error);
+    } else {
+      setName(newName);
+      setEmail(newEmail);
+    }
+
+    navigate("/account"); 
   };
 
   const handleCancel = () => {
@@ -27,8 +43,8 @@ export default function EditAccountPage() {
           <input
             id="username"
             className="w-full border border-black rounded px-4 py-2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
           />
         </div>
 
@@ -38,8 +54,8 @@ export default function EditAccountPage() {
           <input
             id="email"
             className="w-full border border-black rounded px-4 py-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
           />
         </div>
 
