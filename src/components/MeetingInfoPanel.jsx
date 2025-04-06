@@ -1,7 +1,12 @@
 import Icon from '../assets/Group 5.png';
 import PropTypes from 'prop-types';
 
-const MeetingInfoPanel = ({ meeting, viewing, hoverInfo }) => {
+const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }) => {
+
+  const handlePriorityToggle = () => {
+    setPriority(!priority);
+  }
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
@@ -41,11 +46,15 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo }) => {
         <div className="mt-6 flex flex-col space-x-4 bg-white p-8 rounded-xl gap-5">
           <span className="text-2xl">Priority/Non-Priority</span>
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-green-500 border rounded"></div>
+            {priority ? 
+            <div className="w-8 h-8 border border-green-500 rounded"><div className='w-4 h-4 mx-auto bg-green-500 mt-[7px]'></div></div> : 
+            <button className="w-8 h-8 bg-green-500 border border-green-500 rounded" onClick={handlePriorityToggle}></button>}
             <span className="text-2xl">Yes, I&apos;m Available</span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="w-8 h-8 bg-red-500 border rounded"></div>
+            {!priority ? 
+            <div className="w-8 h-8 border border-red-500 rounded"><div className='w-4 h-4 mx-auto bg-red-500 mt-[7px]'></div></div> : 
+            <button className="w-8 h-8 bg-red-500 border border-red-500 rounded" onClick={handlePriorityToggle}></button>}
             <span className="text-2xl">Only If Needed...</span>
           </div>
         </div>
@@ -73,6 +82,8 @@ MeetingInfoPanel.propTypes = {
       })
     ),
   }),
+  priority: PropTypes.bool.isRequired,
+  setPriority: PropTypes.func.isRequired,
 };
 
 export default MeetingInfoPanel;

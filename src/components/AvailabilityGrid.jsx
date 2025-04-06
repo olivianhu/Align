@@ -1,6 +1,8 @@
 // import Icon from '../assets/Group 5.png';
 import PropTypes from 'prop-types';
 import SignUpModal from './SignUpModal';
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../UserContext';
 
 const AvailabilityGrid = ({ 
   meeting, 
@@ -10,9 +12,18 @@ const AvailabilityGrid = ({
   allAvailability, 
   setHoverInfo,
   toggleAvailability,
-  showModal,
   handleSignUp,
+  priority
 }) => {
+  const [showModal, setShowModal] = useState(false);
+  const { userId } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!viewing && !userId) {
+      setShowModal(true);
+    }
+  }, [viewing, userId]);
+
   // Generate time slots from startTime to endTime
   const startTime = parseInt(meeting.start_time);
   const endTime = parseInt(meeting.end_time);
@@ -51,9 +62,9 @@ const AvailabilityGrid = ({
         ))}
       </div>
       
+      <SignUpModal open={showModal} onSignUp={handleSignUp} />
       {dateSlots.map((date) => (
         <div key={date.toISOString()}>
-          {!viewing && <SignUpModal open={showModal} onSignUp={handleSignUp} />}  
           <div className="text-center text-lg">
             {date.toDateString().slice(0, 10)}
           </div>
@@ -98,6 +109,7 @@ const AvailabilityGrid = ({
     </div>
   );
 };
+
 AvailabilityGrid.propTypes = {
   meeting: PropTypes.shape({
     start_time: PropTypes.string.isRequired,
@@ -111,7 +123,6 @@ AvailabilityGrid.propTypes = {
   allAvailability: PropTypes.object.isRequired,
   setHoverInfo: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
-  showModal: PropTypes.bool.isRequired,
   handleSignUp: PropTypes.func.isRequired,
 };
 

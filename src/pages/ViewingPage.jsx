@@ -6,7 +6,6 @@ import AvailabilityGrid from "../components/AvailabilityGrid";
 import MeetingInfoPanel from "../components/MeetingInfoPanel";
 import ViewToggleSwitch from "../components/ViewToggleSwitch";
 import FormControlLabel from '@mui/material/FormControlLabel';
-// import SignUpModal from "../components/SignUpModal";
 
 const ViewingPage = () => {
   const { userId, setUserId } = useContext(UserContext);
@@ -17,7 +16,7 @@ const ViewingPage = () => {
   const [availabilityCounts, setAvailabilityCounts] = useState({});
   const [hoverInfo, setHoverInfo] = useState(null);
   const [allAvailability, setAllAvailability] = useState({});
-  const [showModal, setShowModal] = useState(false);
+  const [priority, setPriority] = useState(true);
 
   const handleToggle = (event) => {
     setViewing(event.target.checked);
@@ -43,7 +42,7 @@ const ViewingPage = () => {
       console.error("Error fetching availabilities:", fetchError);
       return;
     }
-    console.log("avail listing", availabilityData);
+    // console.log("avail listing", availabilityData);
 
     // Save to Supabase
     if (availabilityData.length > 0) {
@@ -56,6 +55,7 @@ const ViewingPage = () => {
           start_time: `${time}:00:00 EST`,
           end_time: `${time+1}:00:00 EST`,
           available: availability[key] == undefined ? true : !availability[key],
+          priority: priority,
         },
       ]);
   
@@ -172,9 +172,7 @@ const ViewingPage = () => {
     }
   
     fetchMeetingData();
-    if (!userId) {
-      setShowModal(true);
-    } else if (meetingId) {
+    if (userId && meetingId) {
       fetchAvailabilities();
     }
     fetchAvailabilityCounts();
@@ -221,7 +219,6 @@ const ViewingPage = () => {
     }
   
     setUserId(user.id);
-    setShowModal(false);
   };  
 
   if (!meeting) return <p>Loading...</p>;
@@ -244,14 +241,16 @@ const ViewingPage = () => {
             allAvailability={allAvailability}
             setHoverInfo={setHoverInfo}
             toggleAvailability={toggleAvailability}
-            showModal={showModal}
             onSignUp={handleSignUp}
+            priority={priority}
           />
           
           <MeetingInfoPanel 
             meeting={meeting}
             viewing={viewing}
             hoverInfo={hoverInfo}
+            priority={priority}
+            setPriority={setPriority}
           />
         </div>
       </div>
