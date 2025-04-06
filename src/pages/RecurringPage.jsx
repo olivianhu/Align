@@ -39,7 +39,7 @@ const RecurringPage = () => {
     
 
     try {
-      const response = await fetch("http://localhost:5001/meetings", {
+      const response = await fetch("http://localhost:5014/meetings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
