@@ -12,9 +12,6 @@ export default function Layout() {
       <div className="flex-1">
         <Outlet />
       </div>
-      {/* <div>
-        <Footer />
-      </div> */}
     </div>
   )
 }

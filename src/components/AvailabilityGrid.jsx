@@ -9,11 +9,10 @@ const AvailabilityGrid = ({
   viewing, 
   availability, 
   availabilityCounts, 
-  allAvailability, 
   setHoverInfo,
   toggleAvailability,
   handleSignUp,
-  priority
+  totalPeople
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { userId } = useContext(UserContext);
@@ -70,7 +69,8 @@ const AvailabilityGrid = ({
           </div>
           {timeSlots.map((time) => {
             const key = `${date.toISOString().split("T")[0]}-${time}`;
-            const count = availabilityCounts[key]?.length || 0;
+            let count = availabilityCounts[key] ? availabilityCounts[key]["available"].length || 0 : 0;
+            count += availabilityCounts[key] ? availabilityCounts[key]["maybe"].length / 2 || 0 : 0;
             
             if (viewing) {
               return (
@@ -78,18 +78,25 @@ const AvailabilityGrid = ({
                   key={key}
                   className="w-full h-12 border cursor-pointer flex items-center justify-center relative"
                   style={{ 
-                    backgroundColor: getGradientColor(count, Object.values(allAvailability).length) 
+                    backgroundColor: getGradientColor(count, totalPeople.length), 
                   }}
                   onMouseEnter={() => {
-                    const available = availabilityCounts[key] || [];
-                    const allPeople = Object.values(allAvailability);
-                    const unavailable = allPeople.filter(p => !available.some(a => a.name === p.name));
-                    setHoverInfo({ available, unavailable });
+                    let available = [];
+                    let maybe = [];
+                    let unavailable = [];
+                    if (!availabilityCounts[key]) {
+                      available =  [];
+                      maybe = [];
+                      unavailable = totalPeople;
+                    } else {
+                      available =  availabilityCounts[key]['available'] || [];
+                      maybe = availabilityCounts[key]['maybe'] || [];
+                      unavailable = availabilityCounts[key]['unavailable'] || [];
+                    }
+                    setHoverInfo({ available, maybe, unavailable });
                   }}
                   onMouseLeave={() => setHoverInfo(null)}
-                >
-                  {count > 0 && <span className="text-black">{count}</span>}
-                </div>
+               />
               );
             } else {
               const availabilityKey = `${date.toISOString()}-${time}:00:00-05`;
@@ -97,7 +104,7 @@ const AvailabilityGrid = ({
                 <div
                   key={availabilityKey}
                   className={`w-full h-12 border cursor-pointer flex items-center justify-center ${
-                    availability[availabilityKey] ? "bg-green-500" : "bg-white"
+                    availability[availabilityKey] ? (availability[availabilityKey][0] ? (availability[availabilityKey][1] ? "bg-green-500" : "bg-red-500") : "bg-white") : "bg-white"
                   }`}
                   onClick={() => toggleAvailability(date, time)}
                 />
@@ -120,10 +127,10 @@ AvailabilityGrid.propTypes = {
   viewing: PropTypes.bool.isRequired,
   availability: PropTypes.object.isRequired,
   availabilityCounts: PropTypes.object.isRequired,
-  allAvailability: PropTypes.object.isRequired,
   setHoverInfo: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
   handleSignUp: PropTypes.func.isRequired,
+  totalPeople: PropTypes.array.isRequired,
 };
 
 export default AvailabilityGrid;

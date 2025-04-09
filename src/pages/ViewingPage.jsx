@@ -15,8 +15,8 @@ const ViewingPage = () => {
   const [viewing, setViewing] = useState(true);
   const [availabilityCounts, setAvailabilityCounts] = useState({});
   const [hoverInfo, setHoverInfo] = useState(null);
-  const [allAvailability, setAllAvailability] = useState({});
-  const [priority, setPriority] = useState(true);
+  const [userPriority, setPriority] = useState(true);
+  const [totalPeople, setTotalPeople] = useState([]);
 
   const handleToggle = (event) => {
     setViewing(event.target.checked);
@@ -25,9 +25,19 @@ const ViewingPage = () => {
   const toggleAvailability = async (day, time) => {
     const key = `${day.toISOString()}-${time}:00:00-05`;
     setAvailability((prev) => {
+      let entry = [true, true];
+      if (prev[key] == undefined) {
+         return({
+          ...prev,
+          [key]: entry,
+        })
+      }
+      if (prev[key][0] == true) entry[0] = false;
+      if (!userPriority) entry[1] = false;
+
       return({
       ...prev,
-      [key]: prev[key] == undefined ? true : !prev[key],
+      [key]: entry,
     })});
 
     const { data: availabilityData, error: fetchError}  = await supabase
@@ -55,7 +65,7 @@ const ViewingPage = () => {
           start_time: `${time}:00:00 EST`,
           end_time: `${time+1}:00:00 EST`,
           available: availability[key] == undefined ? true : !availability[key],
-          priority: priority,
+          priority: userPriority,
         },
       ]);
   
@@ -72,7 +82,8 @@ const ViewingPage = () => {
           date: day.toISOString().split("T")[0],
           start_time: `${time}:00:00 EST`,
           end_time: `${time+1}:00:00 EST`,
-          available: availability[key] == undefined ? true : !availability[key],
+          available: availability[key] == undefined ? true : !(availability[key][0]),
+          priority: userPriority,
         },
       ]);
   
@@ -103,7 +114,7 @@ const ViewingPage = () => {
       // Fetch this user's availability
       const { data: availabilityData, error: availabilityError } = await supabase
         .from("availability")
-        .select("date, start_time, available")
+        .select("date, start_time, available, priority")
         .eq("meeting_id", meetingId)
         .eq("user_id", userId);
   
@@ -113,11 +124,11 @@ const ViewingPage = () => {
       }
   
       const availabilityMap = {};
-      availabilityData.forEach(({ date, start_time, available }) => {
+      availabilityData.forEach(({ date, start_time, available, priority }) => {
         const key = `${new Date(date).toISOString()}-${start_time}`;
-        availabilityMap[key] = available;
+        availabilityMap[key] = [available, priority];
       });
-
+      // console.log(availabilityMap);
       setAvailability(availabilityMap);
     };
 
@@ -125,7 +136,7 @@ const ViewingPage = () => {
       // Fetch all availabilities for the meeting
       const { data: countData, error: countError } = await supabase
         .from("availability")
-        .select("date, start_time, available, user_id")
+        .select("date, start_time, available, user_id, priority")
         .eq("meeting_id", meetingId);
   
       if (countError) {
@@ -151,24 +162,39 @@ const ViewingPage = () => {
       profileData.forEach(p => {
         profileMap[p.id] = p.name;
       });
+
+      setTotalPeople(Object.values(profileMap));
   
       const counts = {};
-      const all = {};
-  
-      countData.forEach(({ date, start_time, available, user_id }) => {
+      const tempAvailability = {};
+
+      countData.forEach(({ date, start_time, available, user_id, priority }) => {
         const key = `${date}-${parseInt(start_time.split(":")[0])}`;
-        const name = profileMap[user_id];
-  
-        if (!name) return;
-  
-        if (!counts[key]) counts[key] = [];
-        if (available) counts[key].push({ name });
-  
-        all[name] = { name, available }; 
+        if (!tempAvailability[key]) tempAvailability[key] = {};
+        tempAvailability[key][user_id] = { available, priority };
       });
 
+      Object.entries(tempAvailability).forEach(([key, userAvailabilities]) => {
+        counts[key] = {
+          available: [],
+          maybe: [],
+          unavailable: [],
+        };
+
+        uniqueUserIds.forEach((userId) => {
+          const name = profileMap[userId];
+          const entry = userAvailabilities[userId];
+
+          if (entry?.available && entry?.priority) {
+            counts[key].available.push(name);
+          } else if (entry?.available) {
+            counts[key].maybe.push(name);
+          } else {
+            counts[key].unavailable.push(name);
+          }
+        });
+      });
       setAvailabilityCounts(counts);
-      setAllAvailability(all);
     }
   
     fetchMeetingData();
@@ -238,18 +264,18 @@ const ViewingPage = () => {
             viewing={viewing}
             availability={availability}
             availabilityCounts={availabilityCounts}
-            allAvailability={allAvailability}
             setHoverInfo={setHoverInfo}
             toggleAvailability={toggleAvailability}
             onSignUp={handleSignUp}
-            priority={priority}
+            priority={userPriority}
+            totalPeople={totalPeople}
           />
           
           <MeetingInfoPanel 
             meeting={meeting}
             viewing={viewing}
             hoverInfo={hoverInfo}
-            priority={priority}
+            priority={userPriority}
             setPriority={setPriority}
           />
         </div>

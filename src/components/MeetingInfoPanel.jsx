@@ -6,7 +6,7 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
   const handlePriorityToggle = () => {
     setPriority(!priority);
   }
-
+  
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
@@ -17,22 +17,26 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
             <div className="flex justify-around">
               <div>
                 <h2 className="text-lg font-bold mb-1">Available</h2>
-                {hoverInfo.available.length > 0 ? (
+                {hoverInfo.available.length > 0 && (
                   hoverInfo.available.map((person, idx) => (
-                    <div key={idx} className="text-gray-700">{person.name}</div>
+                    <div key={idx} className="text-gray-700">{person}</div>
                   ))
-                ) : (
-                  <div className="text-gray-400 italic">No one available</div>
+                )}
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mb-1">Maybe</h2>
+                {hoverInfo.maybe.length > 0 && (
+                  hoverInfo.maybe.map((person, idx) => (
+                    <div key={idx} className="text-gray-700">{person}</div>
+                  ))
                 )}
               </div>
               <div>
                 <h2 className="text-lg font-bold mb-1">Unavailable</h2>
-                {hoverInfo.unavailable.length > 0 ? (
+                {hoverInfo.unavailable.length > 0 && (
                   hoverInfo.unavailable.map((person, idx) => (
-                    <div key={idx} className="text-gray-700">{person.name}</div>
+                    <div key={idx} className="text-gray-700">{person}</div>
                   ))
-                ) : (
-                  <div className="text-gray-400 italic">No one unavailable</div>
                 )}
               </div>
             </div>
@@ -72,6 +76,11 @@ MeetingInfoPanel.propTypes = {
   viewing: PropTypes.bool.isRequired,
   hoverInfo: PropTypes.shape({
     available: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      })
+    ),
+    maybe: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,
       })
