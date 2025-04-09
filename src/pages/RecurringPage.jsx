@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import belowButtonImg from "../assets/Group 2.png";
 import nextHeaderImg from "../assets/Group 4.png";
 import { UserContext } from "../UserContext";
+import supabase from "../helper/supabaseClient"; 
 
 const RecurringPage = () => {
   const navigate = useNavigate();
@@ -34,29 +35,51 @@ const RecurringPage = () => {
       endTime:  `${meetingData.endTime}:00:00 EST`, 
       startDate: `${meetingData.startDate}`, 
       endDate: `${meetingData.endDate}`,
-      userId: userId, // replace with user id
+      userId: userId,
     };
     
-
-    try {
-      const response = await fetch("http://localhost:5014/meetings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    // post meetings through supabase
+    const { data, error } = await supabase
+      .from("meetings")
+      .insert([
+        {
+          name: requestBody.name,
+          start_time: requestBody.startTime,
+          end_time: requestBody.endTime,
+          start_date: requestBody.startDate,
+          end_date: requestBody.endDate,
+          user_id: requestBody.userId,
         },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (response.ok) {
-        console.log("Meeting created successfully");
-        const data = await response.json();
-        navigate("/viewing/" + data.id);
-      } else {
-        console.error("Failed to create meeting");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+      ])
+      .select()
+      .single();
+    if (error) {
+      console.error("Error inserting meeting:", error);
+      return;
     }
+    console.log("Meeting created successfully:", data);
+    navigate("/viewing/" + data.id);
+
+
+    // try {
+    //   const response = await fetch("http://localhost:5014/meetings", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(requestBody),
+    //   });
+
+    //   if (response.ok) {
+    //     console.log("Meeting created successfully");
+    //     const data = await response.json();
+    //     navigate("/viewing/" + data.id);
+    //   } else {
+    //     console.error("Failed to create meeting");
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
   };
 
   return(
@@ -72,20 +95,20 @@ const RecurringPage = () => {
       </div>
 
 
-      <div className="bg-[#79A2DC] w-full h-[92vh] flex flex-col gap-10 text-black p-16">
-        <div className="bg-[#FBFBFB] rounded-[60px] p-[8%] flex-1">
+      <div className="bg-[#79A2DC] w-full h-[93vh] flex flex-col gap-10 text-black p-8 lg:p-16">
+        <div className="bg-[#FBFBFB] rounded-2xl lg:rounded-[60px] p-[8%] flex-1">
 
           <form className="flex flex-col gap-16" onSubmit={handleSubmit}>
             <div className="">
               <div className="flex gap-4 items-center mb-6">
                 <p className="text-3xl font-semibold">Create a new event</p>
-                <img src={nextHeaderImg} alt="Logo" className="h-8" />
+                <img src={nextHeaderImg} alt="Logo" className="h-8 hidden lg:block" />
               </div>
               <input
                   type="text"
                   name="name"
                   placeholder="Name your event..."
-                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-lg px-3 py-2 w-100"
+                  className="border border-[#E8E9E7] rounded-sm border-2 bg-white text-lg px-3 py-2 lg:w-100"
                   value={meetingData.name}
                   onChange={handleChange}
                 />
@@ -145,7 +168,7 @@ const RecurringPage = () => {
 
             <div>
               <label className="text-3xl font-semibold mb-6">What dates might work?</label>
-              <div className="flex gap-3 mt-6 items-center">
+              <div className="lg:flex lg:gap-3 mt-6 lg:items-center">
                 <input
                   type="date"
                   name="startDate"
@@ -153,7 +176,7 @@ const RecurringPage = () => {
                   value={meetingData.startDate}
                   onChange={handleChange}
                 />
-                to
+               <span className="block ml-18 my-3 lg:inline lg:ml-0 lg:my-0">to</span>
                 <input
                   type="date"
                   name="endDate"
@@ -164,7 +187,7 @@ const RecurringPage = () => {
               </div>
             </div>
             
-            <button type="submit" className="bg-[#4672D3] text-white ml-[45%] px-4 py-3 rounded-3xl text-xl w-30">
+            <button type="submit" className="bg-[#4672D3] text-white ml-24 lg:ml-[45%] px-4 py-3 rounded-3xl text-xl w-30">
               Next {'>'} 
             </button>
           </form>
