@@ -3,7 +3,7 @@ import backgroundImg from '../assets/background.png';
 
 export default function LandingPage() {
   return(
-    <div className="w-full flex flex-col gap-12 h-[92vh] pt-60 pl-160" 
+    <div className="w-full flex flex-col gap-12 h-[93vh] lg:pt-60 lg:pl-160 pt-20 pl-10" 
       style={{
         backgroundImage: `url(${backgroundImg})`, 
         backgroundRepeat: "no-repeat",
@@ -12,7 +12,7 @@ export default function LandingPage() {
         backgroundAttachment: 'fixed',
       }}
     >
-      <div className="text-white text-6xl text-left">
+      <div className="text-white text-5xl lg:text-6xl text-left">
         Let’s find a time to <span className="text-[#5CC54A]">meet</span> ! <br/>
         Start building projects <br/>
         people remember.
