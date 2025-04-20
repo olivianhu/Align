@@ -251,14 +251,15 @@ const ViewingPage = () => {
 
   return (
     <>
-      <div className="p-10 bg-[#A6C1ED] h-[92vh] text-center">
+      <div className="p-4 lg:p-10 bg-[#A6C1ED] min-h-screen text-center">
+        <h1 className="lg:hidden text-4xl text-center mt-8 mb-4">{meeting.name}</h1>
         <FormControlLabel
           control={<ViewToggleSwitch checked={viewing} onChange={handleToggle} />}
           label=""
           className="mb-4"
         />
 
-        <div className="grid grid-cols-[3fr_1fr] gap-10">
+        <div className="lg:grid lg:grid-cols-[3fr_1fr] gap-10">
           <AvailabilityGrid
             meeting={meeting}
             viewing={viewing}

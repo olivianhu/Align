@@ -48,14 +48,25 @@ const AvailabilityGrid = ({
     return `rgba(34, 197, 94, ${intensity})`;
   };
 
+  const getSmallDate = (date) => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const dateString = date.toDateString();
+    return <div className= "text-xs lg:text-lg"> {dateString.slice(0, 3)} <br /> {(months.indexOf(dateString.slice(4, 7)) - 1) + "/" + dateString.slice(8, 10)} </div>;
+  }
+  
+
   return (
-    <div className="grid grid-cols-[2fr_4fr_4fr_4fr_4fr_4fr_4fr_4fr_4fr] pt-6 px-4 bg-[#E8F1FF] rounded-2xl">
+    <div className="grid p-6 bg-[#E8F1FF] rounded-2xl"
+      style={{
+        gridTemplateColumns: `2fr repeat(${dateSlots.length}, 4fr)`
+      }}
+    >
       {/* Time Rows */}
-      <div>
+      <div className='lg:mt-3'>
         {timeSlots.map((time) => (
-          <div key={time}>
-            <div className="text-right pr-2 mt-3 mb-7">
-              {time % 12 || 12} {time < 12 ? "AM" : "PM"}
+          <div key={time} >
+            <div className="text-[11px] lg:text-sm text-right pr-2 mt-[31px] lg:mt-7 mb-3 ">
+              {time % 12 || 12} {time < 12 ? "am" : "pm"}
             </div>
           </div>
         ))}
@@ -64,8 +75,8 @@ const AvailabilityGrid = ({
       <SignUpModal open={showModal} onSignUp={handleSignUp} />
       {dateSlots.map((date) => (
         <div key={date.toISOString()}>
-          <div className="text-center text-lg">
-            {date.toDateString().slice(0, 10)}
+          <div className="text-center">
+            {getSmallDate(date)}
           </div>
           {timeSlots.map((time) => {
             const key = `${date.toISOString().split("T")[0]}-${time}`;

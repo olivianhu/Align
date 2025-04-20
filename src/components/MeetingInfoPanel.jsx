@@ -6,10 +6,10 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
   const handlePriorityToggle = () => {
     setPriority(!priority);
   }
-  
+
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
+      <h1 className="hidden lg:block text-5xl text-center mt-20 mb-8">{meeting.name}</h1>
       
       {viewing ? (
         <div className="mt-6 bg-white p-8 rounded-xl gap-5 w-full">
@@ -42,7 +42,7 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
             </div>
           ) : (
             <div className="text-center text-lg text-gray-500 italic">
-              Hover over a time slot to see who is available.
+              <span className='hidden lg:inline'>Hover over</span><span className='lg:hidden'>Tap on</span> a time slot to see who is available.
             </div>
           )}
         </div>
@@ -64,7 +64,7 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
         </div>
       )}
       
-      <img src={Icon} alt="" className="w-50 mt-20"/>
+      <img src={Icon} alt="" className="hidden lg:block w-50 mt-20"/>
     </div>
   );
 };

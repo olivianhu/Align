@@ -63,54 +63,68 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-[92vh] flex flex-col justify-center relative"
+    <div
+      className="w-full min-h-[92vh] flex flex-col justify-center items-center px-4"
       style={{
-        backgroundImage: `url(${backgroundImg})`, 
+        backgroundImage: `url(${backgroundImg})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        backgroundPosition: "center"
-      }} 
+        backgroundPosition: "center",
+      }}
     >
-      <div className="bg-white p-18 w-[30%] rounded-[50px] text-black text-xl h-[80%] m-10 mb-10 right-10 absolute">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-24 justify-center">
-          <div className="flex gap-8 w-[90%] items-center">
-            <h1 className="text-5xl font-semibold">Sign In</h1>
-            <img src={icons} alt="" className="w-38 h-10"/>
+      <div className="bg-white w-full sm:w-[90%] md:w-[70%] lg:w-[50%] xl:w-[30%] rounded-[40px] text-black text-base sm:text-lg p-6 sm:p-10 md:p-14 lg:p-18 my-10 shadow-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-16 sm:gap-20">
+          {/* Header */}
+          <div className="flex gap-6 sm:gap-8 items-center justify-center mt-4">
+            <h1 className="text-4xl sm:text-5xl font-semibold">Sign In</h1>
+            <img src={icons} alt="" className="w-28 h-8 sm:w-36 sm:h-10" />
           </div>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center">
-              <Mail className="size-6 absolute ml-3"/>
+          {/* Inputs */}
+          <div className="flex flex-col gap-5">
+            <div className="relative">
+              <Mail className="size-5 sm:size-6 absolute left-3 top-3.5 text-gray-500" />
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
+                className="bg-[#E8F1FF] rounded-xl pl-12 pr-4 py-3 w-full"
                 onChange={handleInput}
               />
             </div>
-            <div className="flex items-center">
-              <Lock className="size-6 absolute ml-3"/>
+
+            <div className="relative">
+              <Lock className="size-5 sm:size-6 absolute left-3 top-3.5 text-gray-500" />
               <input
                 type="password"
                 name="password"
                 placeholder="Password"
-                className="bg-[#E8F1FF] rounded-xl text-md pl-12 p-3 w-full"
+                className="bg-[#E8F1FF] rounded-xl pl-12 pr-4 py-3 w-full"
                 onChange={handleInput}
               />
             </div>
-            <div className="text-md text-[#3558CE]">
+
+            <div className="text-[#3558CE] text-sm sm:text-md text-right cursor-pointer hover:underline">
               Forgot password?
             </div>
           </div>
-          
-          <div className="text-center flex flex-col gap-3 items-center">
-            <div>Don’t have an account? <Link to="/signup" className="text-[#4672D3]">Sign up</Link></div>
-            <button className="bg-blue px-4 py-3 bg-[#4672D3] rounded-2xl text-white w-32">Log in {'>'}</button>
+
+          {/* Footer */}
+          <div className="text-center flex flex-col gap-4 items-center">
+            <div>
+              Don’t have an account?{" "}
+              <Link to="/signup" className="text-[#4672D3] hover:underline">
+                Sign up
+              </Link>
+            </div>
+            <button className="bg-[#4672D3] text-white px-6 py-3 rounded-2xl w-32 hover:bg-[#3558CE] transition">
+              Log in {'>'}
+            </button>
           </div>
         </form>
       </div>
     </div>
+
   );
 };
 
