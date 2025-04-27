@@ -16,6 +16,7 @@ const AvailabilityGrid = ({
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { userId } = useContext(UserContext);
+  console.log("meeting", meeting);
 
   useEffect(() => {
     if (!viewing && !userId) {
@@ -27,19 +28,24 @@ const AvailabilityGrid = ({
   const startTime = parseInt(meeting.start_time);
   const endTime = parseInt(meeting.end_time);
   const timeSlots = Array.from({ length: endTime - startTime + 1 }, (_, i) => startTime + i);
+  let dateSlots = [];
 
-  // Generate dates from startDate to endDate
-  const startDate = new Date(meeting.start_date);
-  startDate.setDate(startDate.getDate() + 1);
-  const endDate = new Date(meeting.end_date);
-  endDate.setDate(endDate.getDate() + 1);
+  if (!meeting.recurring) {
+    // Generate dates from startDate to endDate
+    const startDate = new Date(meeting.start_date);
+    console.log("Start date:", startDate);
+    startDate.setDate(startDate.getDate() + 1);
+    const endDate = new Date(meeting.end_date);
+    endDate.setDate(endDate.getDate() + 1);
 
-  const dateSlots = [];
-  let currentDate = startDate;
+    let currentDate = startDate;
 
-  while (currentDate <= endDate) {
-    dateSlots.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
+    while (currentDate <= endDate) {
+      dateSlots.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  } else {
+    dateSlots = meeting.days_of_week
   }
 
   const getGradientColor = (count, maxCount) => {
@@ -73,7 +79,61 @@ const AvailabilityGrid = ({
       </div>
       
       <SignUpModal open={showModal} onSignUp={handleSignUp} />
-      {dateSlots.map((date) => (
+
+      {meeting.recurring ? 
+      dateSlots.map((date) => (
+        <div key={date}>
+          <div className="text-center">
+            {date}
+          </div>
+          {timeSlots.map((time) => {
+            const key = `${date}-${time}`;
+            let count = availabilityCounts[key] ? availabilityCounts[key]["available"].length || 0 : 0;
+            count += availabilityCounts[key] ? availabilityCounts[key]["maybe"].length / 2 || 0 : 0;
+            
+            if (viewing) {
+              return (
+                <div
+                  key={key}
+                  className="w-full h-12 border cursor-pointer flex items-center justify-center relative"
+                  style={{ 
+                    backgroundColor: getGradientColor(count, totalPeople.length), 
+                  }}
+                  onMouseEnter={() => {
+                    let available = [];
+                    let maybe = [];
+                    let unavailable = [];
+                    if (!availabilityCounts[key]) {
+                      available =  [];
+                      maybe = [];
+                      unavailable = totalPeople;
+                    } else {
+                      available =  availabilityCounts[key]['available'] || [];
+                      maybe = availabilityCounts[key]['maybe'] || [];
+                      unavailable = availabilityCounts[key]['unavailable'] || [];
+                    }
+                    setHoverInfo({ available, maybe, unavailable });
+                  }}
+                  onMouseLeave={() => setHoverInfo(null)}
+               />
+              );
+            } else {
+              const availabilityKey = `${date}-${time}`;
+              return (
+                <div
+                  key={availabilityKey}
+                  className={`w-full h-12 border cursor-pointer flex items-center justify-center ${
+                    availability[availabilityKey] ? (availability[availabilityKey][0] ? (availability[availabilityKey][1] ? "bg-green-500" : "bg-red-500") : "bg-white") : "bg-white"
+                  }`}
+                  onClick={() => toggleAvailability(date, time)}
+                />
+              );
+            }
+          })}
+        </div>
+      ))
+      :
+      dateSlots.map((date) => (
         <div key={date.toISOString()}>
           <div className="text-center">
             {getSmallDate(date)}
@@ -110,7 +170,7 @@ const AvailabilityGrid = ({
                />
               );
             } else {
-              const availabilityKey = `${date.toISOString()}-${time}:00:00-05`;
+              const availabilityKey = `${date.toISOString().split("T")[0]}-${time}`;
               return (
                 <div
                   key={availabilityKey}
@@ -123,7 +183,8 @@ const AvailabilityGrid = ({
             }
           })}
         </div>
-      ))}
+      ))
+      }
     </div>
   );
 };
@@ -134,6 +195,8 @@ AvailabilityGrid.propTypes = {
     end_time: PropTypes.string.isRequired,
     start_date: PropTypes.string.isRequired,
     end_date: PropTypes.string.isRequired,
+    recurring: PropTypes.bool.isRequired,
+    days_of_week: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   viewing: PropTypes.bool.isRequired,
   availability: PropTypes.object.isRequired,

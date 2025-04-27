@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import belowButtonImg from "../assets/Group 2.png";
 import nextHeaderImg from "../assets/Group 4.png";
 import { UserContext } from "../UserContext";
+import supabase from "../helper/supabaseClient";
 
 const SpecificPage = () => {
   const navigate = useNavigate();
@@ -29,35 +30,36 @@ const SpecificPage = () => {
     e.preventDefault();
 
     const requestBody = {
-      name: `${meetingData.name}`,
-      startTime: `${meetingData.startTime}:00:00 EST`, 
-      endTime:  `${meetingData.endTime}:00:00 EST`, 
+      name: meetingData.name,
+      startTime: `${meetingData.startTime}:00:00 EST`,
+      endTime: `${meetingData.endTime}:00:00 EST`,
       startDate: `${meetingData.startDate}`, 
       endDate: `${meetingData.endDate}`,
-      userId: userId, // replace with user id
+      userId: userId,
     };
-    
-    // console.log(requestBody);
 
-    try {
-      const response = await fetch("http://localhost:5000/meetings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const { data, error } = await supabase
+      .from("meetings")
+      .insert([
+        {
+          name: requestBody.name,
+          start_time: requestBody.startTime,
+          end_time: requestBody.endTime,
+          user_id: requestBody.userId,
+          recurring: false,
+          start_date: requestBody.startDate,
+          end_date: requestBody.endDate,
         },
-        body: JSON.stringify(requestBody),
-      });
+      ])
+      .select()
+      .single();
 
-      if (response.ok) {
-        console.log("Meeting created successfully");
-        const data = await response.json();
-        navigate("/viewing/" + data.id);
-      } else {
-        console.error("Failed to create meeting");
-      }
-    } catch (error) {
-      console.error("Error:", error);
+    if (error) {
+      console.error("Error inserting meeting:", error);
+      return;
     }
+    console.log("Meeting created successfully:", data);
+    navigate("/viewing/" + data.id);
   };
 
   return(

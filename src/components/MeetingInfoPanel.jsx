@@ -64,7 +64,7 @@ const MeetingInfoPanel = ({ meeting, viewing, hoverInfo, priority, setPriority }
         </div>
       )}
       
-      <img src={Icon} alt="" className="hidden lg:block w-50 mt-20"/>
+      <img src={Icon} alt="" className="hidden lg:block w-50 mt-10"/>
     </div>
   );
 };
