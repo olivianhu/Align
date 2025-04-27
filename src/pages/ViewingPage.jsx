@@ -203,7 +203,7 @@ const ViewingPage = () => {
           }
         });
       });
-      console.log("Counts:", counts);
+      // console.log("Counts:", counts);
       setAvailabilityCounts(counts);
     };
 

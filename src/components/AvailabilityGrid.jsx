@@ -11,16 +11,18 @@ const AvailabilityGrid = ({
   availabilityCounts, 
   setHoverInfo,
   toggleAvailability,
-  handleSignUp,
+  onSignUp,
   totalPeople
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { userId } = useContext(UserContext);
-  console.log("meeting", meeting);
+  // console.log("meeting", meeting);
 
   useEffect(() => {
     if (!viewing && !userId) {
       setShowModal(true);
+    } else {
+      setShowModal(false);
     }
   }, [viewing, userId]);
 
@@ -33,7 +35,7 @@ const AvailabilityGrid = ({
   if (!meeting.recurring) {
     // Generate dates from startDate to endDate
     const startDate = new Date(meeting.start_date);
-    console.log("Start date:", startDate);
+    // console.log("Start date:", startDate);
     startDate.setDate(startDate.getDate() + 1);
     const endDate = new Date(meeting.end_date);
     endDate.setDate(endDate.getDate() + 1);
@@ -78,7 +80,7 @@ const AvailabilityGrid = ({
         ))}
       </div>
       
-      <SignUpModal open={showModal} onSignUp={handleSignUp} />
+      <SignUpModal open={showModal} onSignUp={onSignUp} />
 
       {meeting.recurring ? 
       dateSlots.map((date) => (
@@ -203,7 +205,7 @@ AvailabilityGrid.propTypes = {
   availabilityCounts: PropTypes.object.isRequired,
   setHoverInfo: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
-  handleSignUp: PropTypes.func.isRequired,
+  onSignUp: PropTypes.func.isRequired,
   totalPeople: PropTypes.array.isRequired,
 };
 
