@@ -1,7 +1,20 @@
-import { Link } from "react-router-dom";
 import backgroundImg from '../assets/background.png';
+import { useContext } from "react";
+import { UserContext } from "../UserContext";
+import { useNavigate } from "react-router";
 
 export default function LandingPage() {
+  const { userId } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const checkUser = () => {
+    if (!userId) {
+      alert("Please log in to create a new event");
+    } else {
+      navigate("/creation");
+    }
+  };
+  
   return(
     <div className="w-full flex flex-col gap-12 h-[93vh] lg:pt-60 lg:pl-160 pt-20 pl-10" 
       style={{
@@ -17,9 +30,13 @@ export default function LandingPage() {
         Start building projects <br/>
         people remember.
       </div>
-      <Link to={"/creation"} className="bg-[#5CC54A] w-60 px-3 py-4 rounded-full text-center text-white text-xl hover:bg-[#32AF1C]">
+      
+      <button
+        onClick={() => checkUser()}
+        className="bg-[#5CC54A] w-60 px-3 py-4 rounded-full text-center text-white text-xl hover:bg-[#32AF1C]"
+      >
         Create a new event
-      </Link>
+      </button>
     </div>
   )
 }
